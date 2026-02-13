@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { playCorrect, playWrong } from '../utils/duoSounds';
+import { playCorrect, playWrong, playSoundFromFile } from '../utils/duoSounds';
 
 // Sonido correcto: public/sounds/correct.mp3 (Duolingo). Incorrecto: wrong.mp3 o tono generado.
 const USE_SOUND_FILES = true;
@@ -57,17 +57,13 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
     if (isCorrect) {
       setCorrectCount((c) => c + 1);
       if (USE_SOUND_FILES) {
-        const a = new Audio(`${import.meta.env.BASE_URL || '/'}sounds/correct.mp3`);
-        a.volume = 0.6;
-        a.play().catch(() => playCorrect());
+        playSoundFromFile('correct');
       } else {
         playCorrect();
       }
     } else {
       if (USE_SOUND_FILES) {
-        const a = new Audio(`${import.meta.env.BASE_URL || '/'}sounds/wrong.mp3`);
-        a.volume = 0.6;
-        a.play().catch(() => playWrong());
+        playSoundFromFile('wrong');
       } else {
         playWrong();
       }

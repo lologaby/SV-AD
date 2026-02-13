@@ -13,6 +13,14 @@ function getAudioContext(): AudioContext {
   return audioContext;
 }
 
+/** En Safari el contexto puede estar suspended hasta el primer tap; reanudar si hace falta */
+function resumeContext(ctx: AudioContext): Promise<void> {
+  if (ctx.state === 'suspended') {
+    return ctx.resume();
+  }
+  return Promise.resolve();
+}
+
 /** Sonido corto de "correcto" (tono ascendente, tipo ding) */
 export function playCorrect(): void {
   try {
@@ -54,13 +62,31 @@ export function playWrong(): void {
   }
 }
 
-/** Intenta reproducir un MP3 desde public/sounds/ (ej. duolingo-style) */
+/**
+ * Reproduce un MP3 con Web Audio API (sin crear <audio> en el DOM).
+ * Así Safari y otros navegadores no muestran ningún reproductor.
+ */
 export function playSoundFromFile(filename: 'correct' | 'wrong'): void {
-  const url = `${import.meta.env.BASE_URL || '/'}sounds/${filename}.mp3`;
-  const audio = new Audio(url);
-  audio.volume = 0.6;
-  audio.play().catch(() => {
-    if (filename === 'correct') playCorrect();
-    else playWrong();
-  });
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
+  const url = `${base}sounds/${filename}.mp3`;
+
+  const ctx = getAudioContext();
+
+  resumeContext(ctx)
+    .then(() => fetch(url))
+    .then((res) => res.arrayBuffer())
+    .then((buffer) => ctx.decodeAudioData(buffer))
+    .then((decoded) => {
+      const source = ctx.createBufferSource();
+      source.buffer = decoded;
+      const gain = ctx.createGain();
+      gain.gain.value = 0.6;
+      source.connect(gain);
+      gain.connect(ctx.destination);
+      source.start(0);
+    })
+    .catch(() => {
+      if (filename === 'correct') playCorrect();
+      else playWrong();
+    });
 }
