@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { playCorrect, playWrong, playSoundFromFile } from '../utils/duoSounds';
+import DuoOwl from './DuoOwl';
 
 // Sonido correcto: public/sounds/correct.mp3 (Duolingo). Incorrecto: wrong.mp3 o tono generado.
 const USE_SOUND_FILES = true;
@@ -101,12 +102,21 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   };
 
   const progressPercent = ((currentIndex + (showFeedback ? 1 : 0)) / questions.length) * 100;
-  const hearts = 3; // decorativo tipo Duolingo
+  const totalWrong = currentIndex - correctCount + (selectedIndex !== null && !lastAnswerCorrect ? 1 : 0);
+  const heartsLeft = Math.max(0, 3 - totalWrong);
+  const showDuoInQuestion = currentIndex % 2 === 0; // Duo en preguntas pares
 
-  // Mostrar GIF de Shrek con botón cuando pasan la prueba
+  // Pantalla de éxito: estilo Duolingo + Shrek + Ver mi sorpresa (sin tocar lo de Instagram)
   if (finished && passed && showShrek) {
     return (
-      <div className="w-full h-full min-h-screen bg-gradient-to-br from-valentine-dark-red via-valentine-red to-valentine-pink flex flex-col items-center justify-center px-6 text-center">
+      <div className="w-full min-h-screen bg-duo-snow flex flex-col items-center px-6 pt-8 pb-10">
+        {/* Duo celebrando - tema Duolingo */}
+        <div className="mb-4 animate-fade-in">
+          <DuoOwl size={100} mood="celebrate" />
+        </div>
+        <p className="text-duo-green-dark font-duo font-bold text-2xl mb-1">¡Lección completada!</p>
+        <p className="text-duo-eel font-duo text-lg mb-6">Nuestro amor es un Duolingo 💚</p>
+
         <div className="mb-6 animate-fade-in">
           {/* Usar video si es .mp4/.webm para control de loop, sino usar img para GIF */}
           {gifSrc.endsWith('.mp4') || gifSrc.endsWith('.webm') ? (
@@ -153,15 +163,15 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
             💚
           </div>
         </div>
-        <h1 className="text-3xl md:text-4xl font-display font-bold text-white mb-2 animate-fade-in">
+        <h1 className="text-2xl font-duo font-bold text-duo-eel mb-2 animate-fade-in">
           ¡Eres digno/a! 🎉
         </h1>
-        <p className="text-xl font-body text-white/90 mb-8 animate-fade-in">
+        <p className="text-duo-eel font-duo mb-8 animate-fade-in">
           Shrek aprueba tu conocimiento 💚
         </p>
         <button
           onClick={onPass}
-          className="bg-white text-valentine-red font-body font-semibold px-8 py-4 rounded-full shadow-xl hover:scale-105 active:scale-95 transition-transform animate-fade-in"
+          className="w-full max-w-xs py-4 rounded-2xl font-duo font-bold text-lg uppercase tracking-wide text-white bg-duo-green hover:bg-duo-green-light transition-transform active:scale-[0.98] animate-fade-in"
         >
           Ver mi sorpresa
         </button>
@@ -171,43 +181,23 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
 
   if (finished && !passed) {
     return (
-      <div className="w-full h-full min-h-screen bg-gradient-to-br from-valentine-dark-red via-valentine-red to-valentine-pink flex flex-col items-center justify-center px-6 text-center">
-        {passed ? (
-          <>
-            <div className="text-7xl mb-6 animate-pulse-custom">💖</div>
-            <h1 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
-              ¡Eres digno/a!
-            </h1>
-            <p className="text-xl font-body text-white/90 mb-8">
-              Has demostrado que conoces nuestro amor. Toca para ver tu sorpresa.
-            </p>
-            <button
-              onClick={onPass}
-              className="bg-white text-valentine-red font-body font-semibold px-8 py-4 rounded-full shadow-xl hover:scale-105 active:scale-95 transition-transform"
-            >
-              Ver mi sorpresa
-            </button>
-          </>
-        ) : (
-          <>
-            <div className="text-6xl mb-6">😤</div>
-            <h1 className="text-3xl md:text-4xl font-display font-bold text-white mb-4">
-              No has pasado la prueba
-            </h1>
-            <p className="text-xl font-body text-white/90 mb-2">
-              Solo acertaste {correctCount} de {questions.length}. ¡Repasa nuestros momentos!
-            </p>
-            <p className="text-lg font-body text-white/80 mb-8">
-              (En el fondo sabes que sí eres digno/a 💕)
-            </p>
-            <button
-              onClick={handleRetry}
-              className="bg-duo-green hover:bg-duo-green-light text-white font-duo font-bold px-8 py-4 rounded-full shadow-lg hover:scale-105 active:scale-95 transition-transform"
-            >
-              Reintentar
-            </button>
-          </>
-        )}
+      <div className="w-full min-h-screen bg-duo-red-bg flex flex-col items-center justify-center px-6 py-10">
+        <DuoOwl size={120} mood="sad" className="mb-6" />
+        <h1 className="text-duo-red-dark font-duo font-bold text-2xl mb-2 text-center">
+          Sigue practicando
+        </h1>
+        <p className="text-duo-eel font-duo text-center mb-2">
+          Acertaste {correctCount} de {questions.length}. ¡Tú puedes!
+        </p>
+        <p className="text-gray-500 font-duo text-sm text-center mb-8">
+          Nuestro amor es un Duolingo — no te rindas 💚
+        </p>
+        <button
+          onClick={handleRetry}
+          className="w-full max-w-xs py-4 rounded-2xl font-duo font-bold text-lg uppercase tracking-wide text-white bg-duo-red hover:opacity-95 transition-transform active:scale-[0.98]"
+        >
+          Reintentar
+        </button>
       </div>
     );
   }
@@ -215,7 +205,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   // Estilo Duolingo como en las capturas: barra verde arriba, tiles, feedback abajo
   return (
     <div className="w-full min-h-screen bg-duo-snow flex flex-col font-duo safe-area-pb">
-      {/* Top bar Duolingo: barra de progreso verde continua + icono corazones */}
+      {/* Top bar Duolingo 2026: X, barra progreso, corazones */}
       <header className="flex items-center justify-between px-4 pt-4 pb-2">
         <button type="button" className="w-10 h-10 flex items-center justify-center text-gray-400" aria-label="Cerrar">
           <span className="text-2xl font-bold">×</span>
@@ -226,19 +216,42 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
             style={{ width: `${progressPercent}%` }}
           />
         </div>
-        <div className="flex items-center gap-1 text-duo-purple font-duo font-bold">
-          <span className="text-xl">⚡</span>
-          <span>{hearts}</span>
+        <div className="flex items-center gap-0.5">
+          {[1, 2, 3].map((i) => (
+            <span
+              key={i}
+              className={`text-xl ${i <= heartsLeft ? 'text-duo-red' : 'text-gray-300'}`}
+              aria-hidden
+            >
+              ♥
+            </span>
+          ))}
         </div>
       </header>
 
-      {/* Título del ejercicio */}
-      <p className="text-duo-eel font-duo font-bold text-lg text-center px-4 pt-2 pb-6">
+      {/* Tema: Nuestro amor es un Duolingo + racha */}
+      <div className="flex items-center justify-center gap-2 pt-2 pb-2">
+        <DuoOwl size={36} mood="happy" />
+        <p className="text-duo-green-dark font-duo font-bold text-base">
+          Nuestro amor es un Duolingo
+        </p>
+        {correctCount > 0 && (
+          <span className="flex items-center gap-0.5 text-duo-orange font-duo font-bold text-sm" title="Racha">
+            🔥 {correctCount}
+          </span>
+        )}
+      </div>
+
+      {/* Instrucción */}
+      <p className="text-gray-500 font-duo text-sm text-center px-4 pb-4">
         Elige la respuesta correcta
       </p>
 
-      {/* Pregunta */}
-      <div className="px-6 pb-6">
+      {/* Pregunta (con Duo en preguntas pares) */}
+      <div className="px-6 pb-6 flex flex-col items-center">
+        {showDuoInQuestion && (
+          <DuoOwl size={56} mood="happy" className="mb-3" />
+        )}
         <p className="text-duo-eel font-duo font-bold text-xl md:text-2xl text-center leading-tight">
           {currentQuestion.question}
         </p>
@@ -287,15 +300,15 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
             lastAnswerCorrect ? 'bg-duo-green-bg' : 'bg-duo-red-bg'
           }`}
         >
-          <div className={`flex items-center justify-center gap-2 mb-6 ${lastAnswerCorrect ? 'text-duo-green-dark' : 'text-duo-red-dark'}`}>
+          <div className={`flex flex-col items-center gap-2 mb-6 ${lastAnswerCorrect ? 'text-duo-green-dark' : 'text-duo-red-dark'}`}>
             {lastAnswerCorrect ? (
               <>
-                <span className="text-3xl">✓</span>
+                <DuoOwl size={64} mood="celebrate" />
                 <span className="font-duo font-bold text-2xl">¡Perfecto!</span>
               </>
             ) : (
               <>
-                <span className="text-3xl">✗</span>
+                <DuoOwl size={56} mood="sad" />
                 <span className="font-duo font-bold text-xl">Sigue practicando</span>
               </>
             )}
