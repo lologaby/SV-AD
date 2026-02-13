@@ -368,10 +368,6 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
           </span>
         )}
       </div>
-      <p className="text-rose-700 font-duo text-sm text-center px-4 pb-4">
-        {userName}, demuestra que eres digna de esta cita especial romántica secreta.
-      </p>
-
       {/* Instrucción */}
       <p className="text-gray-500 font-duo text-sm text-center px-4 pb-2">
         {isImageQuestion ? 'Elige la imagen correcta' : 'Elige la respuesta correcta'}
