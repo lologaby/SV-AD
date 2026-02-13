@@ -35,7 +35,7 @@ const CinemaInviteSlide: React.FC<CinemaInviteSlideProps> = ({
         {/* Logo de Caribbean Cinemas */}
         <div className="flex justify-center mb-6">
           <img
-            src="https://caribbeancinemas.com/img/logo.png"
+            src="caribbean-cinemas-profile.png"
             alt="Caribbean Cinemas"
             className="h-16 object-contain"
             loading="lazy"
