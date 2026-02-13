@@ -76,7 +76,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   const [saidNo, setSaidNo] = useState(false);
   const [nameInput, setNameInput] = useState('');
   const [nameError, setNameError] = useState(false);
-  const [userName, setUserName] = useState('');
+  const [, setUserName] = useState('');
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
