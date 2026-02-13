@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import CinemaInviteSlide from './CustomSlides/CinemaInviteSlide';
 
-/** Foto de perfil del "perfil" Caribbean Cinemas (logo oficial, mismo que IG) */
-const CARIBBEAN_CINEMAS_PROFILE_IMAGE = 'https://caribbeancinemas.com/img/logo.png';
+/** Foto de perfil del "perfil" Caribbean Cinemas (en public/caribbean-cinemas-profile.png) */
+const CARIBBEAN_CINEMAS_PROFILE_IMAGE = 'caribbean-cinemas-profile.png';
 
 interface ProfileSwitchAnimationProps {
   /** Al terminar la animación (después de mostrar la invitación) */

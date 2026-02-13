@@ -13,8 +13,10 @@ interface WorthyQuizProps {
   questions: QuizQuestion[];
   minCorrect?: number;
   onPass: () => void;
-  /** URL opcional del GIF al pasar (ej. /shrek-approval.gif si está en public/) */
+  /** URL del GIF animado al pasar (ej. shrek-approval.gif en public/) */
   passGifUrl?: string;
+  /** Si el GIF falla (404), se usa esta imagen estática (ej. shrek-approval.png) */
+  passGifFallbackUrl?: string;
 }
 
 /**
@@ -26,6 +28,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   minCorrect = 2,
   onPass,
   passGifUrl = SHREK_GIF_URL,
+  passGifFallbackUrl,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -33,6 +36,8 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   const [finished, setFinished] = useState(false);
   const [passed, setPassed] = useState(false);
   const [showShrek, setShowShrek] = useState(false);
+  const [gifSrc, setGifSrc] = useState<string>(passGifUrl ?? SHREK_GIF_URL);
+  const [gifTriedFallback, setGifTriedFallback] = useState(false);
 
   const currentQuestion = questions[currentIndex];
   const isLastQuestion = currentIndex === questions.length - 1;
@@ -75,6 +80,8 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
     setFinished(false);
     setPassed(false);
     setShowShrek(false);
+    setGifSrc(passGifUrl ?? SHREK_GIF_URL);
+    setGifTriedFallback(false);
   };
 
   // Mostrar GIF de Shrek cuando pasan la prueba (Giphy = URLs estables)
@@ -83,13 +90,19 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
       <div className="w-full h-full min-h-screen bg-gradient-to-br from-valentine-dark-red via-valentine-red to-valentine-pink flex flex-col items-center justify-center px-6 text-center">
         <div className="mb-6 animate-fade-in">
           <img
-            src={passGifUrl}
+            src={gifSrc}
             alt="Shrek aprobando"
             className="w-full max-w-md rounded-2xl shadow-2xl"
             style={{ maxHeight: '400px', objectFit: 'contain' }}
             onError={(e) => {
-              e.currentTarget.style.display = 'none';
-              const next = e.currentTarget.nextElementSibling;
+              if (passGifFallbackUrl && !gifTriedFallback) {
+                setGifTriedFallback(true);
+                setGifSrc(passGifFallbackUrl);
+                return;
+              }
+              const img = e.currentTarget;
+              img.style.display = 'none';
+              const next = img.nextElementSibling;
               if (next) (next as HTMLElement).classList.remove('hidden');
             }}
           />

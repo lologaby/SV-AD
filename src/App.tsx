@@ -35,7 +35,8 @@ function App() {
           questions={QUIZ_QUESTIONS}
           minCorrect={2}
           onPass={() => setStage('stories')}
-          passGifUrl="shrek-approval.png"
+          passGifUrl="shrek.gif"
+          passGifFallbackUrl="shrek-approval.png"
         />
       )}
 
