@@ -56,12 +56,9 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
         const didPass = newCorrectCount >= minCorrect;
         setPassed(didPass);
         if (didPass) {
-          // Si pasó, mostrar GIF de Shrek primero; luego pantalla con botón
+          // Si pasó, mostrar GIF de Shrek con botón en la misma pantalla
           setShowShrek(true);
-          setTimeout(() => {
-            setShowShrek(false);
-            setFinished(true);
-          }, 2500); // Duración del GIF (~2.3s) + pequeño delay
+          setFinished(true); // Mostrar botón inmediatamente
         } else {
           // Si no pasó, mostrar resultado directamente
           setFinished(true);
@@ -84,28 +81,52 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
     setGifTriedFallback(false);
   };
 
-  // Mostrar GIF de Shrek cuando pasan la prueba (Giphy = URLs estables)
-  if (showShrek && passed) {
+  // Mostrar GIF de Shrek con botón cuando pasan la prueba
+  if (finished && passed && showShrek) {
     return (
       <div className="w-full h-full min-h-screen bg-gradient-to-br from-valentine-dark-red via-valentine-red to-valentine-pink flex flex-col items-center justify-center px-6 text-center">
         <div className="mb-6 animate-fade-in">
-          <img
-            src={gifSrc}
-            alt="Shrek aprobando"
-            className="w-full max-w-md rounded-2xl shadow-2xl"
-            style={{ maxHeight: '400px', objectFit: 'contain' }}
-            onError={(e) => {
-              if (passGifFallbackUrl && !gifTriedFallback) {
-                setGifTriedFallback(true);
-                setGifSrc(passGifFallbackUrl);
-                return;
-              }
-              const img = e.currentTarget;
-              img.style.display = 'none';
-              const next = img.nextElementSibling;
-              if (next) (next as HTMLElement).classList.remove('hidden');
-            }}
-          />
+          {/* Usar video si es .mp4/.webm para control de loop, sino usar img para GIF */}
+          {gifSrc.endsWith('.mp4') || gifSrc.endsWith('.webm') ? (
+            <video
+              src={gifSrc}
+              className="w-full max-w-md rounded-2xl shadow-2xl"
+              style={{ maxHeight: '400px', objectFit: 'contain' }}
+              autoPlay
+              playsInline
+              muted
+              loop={false}
+              onError={(e) => {
+                if (passGifFallbackUrl && !gifTriedFallback) {
+                  setGifTriedFallback(true);
+                  setGifSrc(passGifFallbackUrl);
+                  return;
+                }
+                const video = e.currentTarget;
+                video.style.display = 'none';
+                const next = video.nextElementSibling;
+                if (next) (next as HTMLElement).classList.remove('hidden');
+              }}
+            />
+          ) : (
+            <img
+              src={gifSrc}
+              alt="Shrek aprobando"
+              className="w-full max-w-md rounded-2xl shadow-2xl"
+              style={{ maxHeight: '400px', objectFit: 'contain' }}
+              onError={(e) => {
+                if (passGifFallbackUrl && !gifTriedFallback) {
+                  setGifTriedFallback(true);
+                  setGifSrc(passGifFallbackUrl);
+                  return;
+                }
+                const img = e.currentTarget;
+                img.style.display = 'none';
+                const next = img.nextElementSibling;
+                if (next) (next as HTMLElement).classList.remove('hidden');
+              }}
+            />
+          )}
           <div className="hidden text-8xl mb-6 animate-pulse-custom" aria-hidden>
             💚
           </div>
@@ -113,14 +134,20 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
         <h1 className="text-3xl md:text-4xl font-display font-bold text-white mb-2 animate-fade-in">
           ¡Eres digno/a! 🎉
         </h1>
-        <p className="text-xl font-body text-white/90 animate-fade-in">
+        <p className="text-xl font-body text-white/90 mb-8 animate-fade-in">
           Shrek aprueba tu conocimiento 💚
         </p>
+        <button
+          onClick={onPass}
+          className="bg-white text-valentine-red font-body font-semibold px-8 py-4 rounded-full shadow-xl hover:scale-105 active:scale-95 transition-transform animate-fade-in"
+        >
+          Ver mi sorpresa
+        </button>
       </div>
     );
   }
 
-  if (finished) {
+  if (finished && !passed) {
     return (
       <div className="w-full h-full min-h-screen bg-gradient-to-br from-valentine-dark-red via-valentine-red to-valentine-pink flex flex-col items-center justify-center px-6 text-center">
         {passed ? (
