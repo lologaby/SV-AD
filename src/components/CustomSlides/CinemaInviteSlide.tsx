@@ -7,13 +7,17 @@ export interface CinemaInviteSlideProps {
   date?: string;
   time?: string;
   seats?: string;
-  qrCodeData?: string; // URL del ticket o código de confirmación
+  screen?: string;
+  qrCodeData?: string; // URL del ticket o código de confirmación (si no se usa qrImageUrl)
+  qrImageUrl?: string; // Imagen QR ya generada (ej. public/qr-tickets.png)
+  ticketNumber?: string; // Número de ticket bajo el QR (ej. #9338842)
+  posterUrl?: string; // Póster/artwork de la película (ej. public/poster-entre-las-vias.png)
   message?: string;
 }
 
 /**
  * Slide de invitación al cine con QR code para la taquilla
- * Incluye logo de Caribbean Cinemas
+ * (El logo del cine ya aparece en la foto de perfil del story.)
  */
 const CinemaInviteSlide: React.FC<CinemaInviteSlideProps> = ({
   movieTitle = 'Película Sorpresa',
@@ -21,7 +25,11 @@ const CinemaInviteSlide: React.FC<CinemaInviteSlideProps> = ({
   date = '14 de febrero',
   time = '20:30',
   seats = 'Asientos por confirmar',
+  screen,
   qrCodeData = 'https://caribbeancinemas.com',
+  qrImageUrl,
+  ticketNumber,
+  posterUrl,
   message = '¿Vamos al cine?',
 }) => {
   return (
@@ -31,33 +39,30 @@ const CinemaInviteSlide: React.FC<CinemaInviteSlideProps> = ({
         <span className="text-[20rem]">🎬</span>
       </div>
 
-      <div className="relative z-10 w-full max-w-md animate-fade-in">
-        {/* Logo de Caribbean Cinemas */}
-        <div className="flex justify-center mb-6">
-          <img
-            src="caribbean-cinemas-profile.png"
-            alt="Caribbean Cinemas"
-            className="h-16 object-contain"
-            loading="lazy"
-            decoding="async"
-            onError={(e) => {
-              // Fallback si no carga el logo
-              e.currentTarget.style.display = 'none';
-            }}
-          />
-        </div>
-
+      <div className="relative z-10 w-full max-w-md animate-fade-in flex flex-col items-center overflow-y-auto">
         {/* Mensaje principal */}
-        <div className="text-center mb-8">
-          <div className="text-5xl mb-4">🎟️</div>
-          <h1 className="text-3xl md:text-4xl font-display font-bold text-white mb-3 drop-shadow-2xl">
+        <div className="text-center mb-4">
+          <div className="text-5xl mb-2">🎟️</div>
+          <h1 className="text-2xl md:text-3xl font-display font-bold text-white mb-1 drop-shadow-2xl">
             {message}
           </h1>
-          <p className="text-lg text-white/80 font-body">Te invito al cine</p>
+          <p className="text-base text-white/80 font-body">Te invito al cine</p>
         </div>
 
+        {/* Póster de la película */}
+        {posterUrl && (
+          <div className="w-full max-w-[200px] rounded-xl overflow-hidden shadow-2xl mb-4 flex-shrink-0">
+            <img
+              src={posterUrl}
+              alt={movieTitle}
+              className="w-full h-auto object-cover"
+              loading="eager"
+            />
+          </div>
+        )}
+
         {/* Ticket estilo tarjeta */}
-        <div className="bg-white rounded-2xl overflow-hidden shadow-2xl">
+        <div className="bg-white rounded-2xl overflow-hidden shadow-2xl w-full">
           {/* Borde superior decorativo */}
           <div className="h-2 bg-gradient-to-r from-valentine-pink via-valentine-red to-valentine-dark-red"></div>
 
@@ -82,22 +87,45 @@ const CinemaInviteSlide: React.FC<CinemaInviteSlideProps> = ({
               </div>
             </div>
 
-            <div>
-              <p className="text-xs text-gray-500 uppercase font-semibold">Asientos</p>
-              <p className="text-lg font-body text-gray-800">{seats}</p>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-xs text-gray-500 uppercase font-semibold">Asientos</p>
+                <p className="text-lg font-body text-gray-800">{seats}</p>
+              </div>
+              {screen && (
+                <div>
+                  <p className="text-xs text-gray-500 uppercase font-semibold">Sala</p>
+                  <p className="text-lg font-body text-gray-800">{screen}</p>
+                </div>
+              )}
             </div>
 
-            {/* QR Code */}
-            <div className="flex justify-center pt-4 pb-2">
+            {/* QR Code: imagen proporcionada o generada */}
+            <div className="flex flex-col items-center pt-4 pb-2">
               <div className="bg-white p-4 rounded-xl">
-                <QRCode
-                  value={qrCodeData}
-                  size={180}
-                  level="H"
-                  bgColor="#ffffff"
-                  fgColor="#000000"
-                />
+                {qrImageUrl ? (
+                  <img
+                    src={qrImageUrl}
+                    alt="Código QR para taquilla"
+                    className="w-[180px] h-[180px] object-contain"
+                    width={180}
+                    height={180}
+                  />
+                ) : (
+                  <QRCode
+                    value={qrCodeData}
+                    size={180}
+                    level="H"
+                    bgColor="#ffffff"
+                    fgColor="#000000"
+                  />
+                )}
               </div>
+              {ticketNumber && (
+                <p className="text-center text-lg font-body font-semibold text-gray-800 mt-2">
+                  {ticketNumber}
+                </p>
+              )}
             </div>
 
             <p className="text-center text-xs text-gray-500">

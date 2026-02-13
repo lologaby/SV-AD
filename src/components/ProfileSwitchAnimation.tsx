@@ -14,7 +14,11 @@ interface ProfileSwitchAnimationProps {
     date?: string;
     time?: string;
     seats?: string;
+    screen?: string;
     qrCodeData?: string;
+    qrImageUrl?: string;
+    ticketNumber?: string;
+    posterUrl?: string;
     message?: string;
   };
 }

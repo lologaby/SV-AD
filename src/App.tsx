@@ -62,12 +62,15 @@ function App() {
       {stage === 'profile_switch' && (
         <ProfileSwitchAnimation
           cinemaInvite={{
-            movieTitle: 'Película Sorpresa 🎬',
-            cinema: 'Caribbean Cinemas Plaza Escorial',
+            movieTitle: 'Entre las Vías: La Historia del Tren en PR',
+            cinema: 'Plaza Las Américas',
             date: '14 de febrero, 2026',
-            time: '20:30',
-            seats: 'Por confirmar en taquilla',
-            qrCodeData: 'https://caribbeancinemas.com/tickets/12345',
+            time: '7:10 PM',
+            seats: 'K10, K11',
+            screen: 'Screen 7',
+            qrImageUrl: 'qr-tickets.png',
+            ticketNumber: '#9338842',
+            posterUrl: 'poster-entre-las-vias.png',
             message: '¿Vamos al cine?',
           }}
         />

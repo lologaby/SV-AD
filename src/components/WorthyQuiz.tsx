@@ -86,6 +86,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   const [showShrek, setShowShrek] = useState(false);
   const [gifSrc, setGifSrc] = useState<string>(passGifUrl ?? SHREK_GIF_URL);
   const [gifTriedFallback, setGifTriedFallback] = useState(false);
+  const [gifKey, setGifKey] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
   const [lastAnswerCorrect, setLastAnswerCorrect] = useState(false);
   const [lives, setLives] = useState(99);
@@ -128,6 +129,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
       const didPass = correctCount >= minCorrect;
       setPassed(didPass);
       if (didPass) {
+        setGifKey((k) => k + 1);
         setShowShrek(true);
         setFinished(true);
       } else {
@@ -147,6 +149,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
     setPassed(false);
     setShowShrek(false);
     setShowFeedback(false);
+    setGifKey(0);
     setLives(99);
     setGifSrc(passGifUrl ?? SHREK_GIF_URL);
     setGifTriedFallback(false);
@@ -274,10 +277,13 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
             />
           ) : (
             <img
-              src={gifSrc}
+              key={`shrek-gif-${gifKey}`}
+              src={`${gifSrc}${gifSrc.includes('?') ? '&' : '?'}n=${gifKey}`}
               alt="Shrek aprobando"
               className="w-full max-w-md rounded-2xl shadow-2xl"
               style={{ maxHeight: '400px', objectFit: 'contain' }}
+              loading="eager"
+              decoding="async"
               onError={(e) => {
                 if (passGifFallbackUrl && !gifTriedFallback) {
                   setGifTriedFallback(true);
