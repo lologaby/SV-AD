@@ -26,6 +26,7 @@ interface ProfileSwitchAnimationProps {
 /**
  * Animación que simula swipe left dentro del story para cambiar al siguiente usuario
  * Como en Instagram: deslizas hacia la izquierda y cambias directamente al siguiente perfil
+ * Optimizado para Safari iOS 26
  */
 const ProfileSwitchAnimation: React.FC<ProfileSwitchAnimationProps> = ({
   onComplete,
@@ -47,48 +48,53 @@ const ProfileSwitchAnimation: React.FC<ProfileSwitchAnimationProps> = ({
     return () => clearTimeout(t);
   }, [phase]);
 
+  // Header component reutilizable
+  const ProfileHeader = ({ className = '' }: { className?: string }) => (
+    <div className={`flex items-center gap-3 px-4 py-3 ${className}`}>
+      <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-white/30 flex-shrink-0 bg-white relative">
+        <img
+          src={CARIBBEAN_CINEMAS_PROFILE_IMAGE}
+          alt="Caribbean Cinemas"
+          className="w-full h-full object-contain"
+          loading="eager"
+          onError={(e) => {
+            e.currentTarget.style.display = 'none';
+            const fallback = e.currentTarget.parentElement?.querySelector('[data-fallback]');
+            if (fallback) fallback.classList.remove('hidden');
+          }}
+        />
+        <div data-fallback className="absolute inset-0 bg-gradient-to-tr from-valentine-pink to-valentine-red flex items-center justify-center hidden">
+          <span className="text-lg">🎬</span>
+        </div>
+      </div>
+      <div className="min-w-0">
+        <p className="text-white font-body font-semibold text-sm truncate">Caribbean Cinemas</p>
+        <p className="text-white/70 font-body text-xs">Ahora</p>
+      </div>
+    </div>
+  );
+
   // Fase 1: Simular swipe left - el story actual se desliza hacia la izquierda
   if (phase === 'swiping') {
     return (
-      <div className="w-full h-full bg-black relative overflow-hidden safe-area-all">
+      <div className="stories-container bg-black">
         {/* Story anterior (deslizándose hacia la izquierda) */}
         <div className="absolute inset-0 animate-swipe-left">
           <div className="w-full h-full bg-gradient-to-br from-valentine-dark-red via-valentine-red to-valentine-pink flex items-center justify-center">
             <div className="text-center text-white">
-              <div className="text-6xl mb-4">💖</div>
-              <p className="text-2xl font-display">Fin del story</p>
+              <div className="text-5xl mb-3">💖</div>
+              <p className="text-xl font-display">Fin del story</p>
             </div>
           </div>
         </div>
 
-        {/* Header del nuevo perfil (Caribbean Cinemas) apareciendo desde la derecha */}
-        <div className="absolute top-0 left-0 right-0 z-30 animate-slide-from-right">
-          <div className="flex items-center gap-3 px-4 py-3 bg-black/50 backdrop-blur-sm">
-            <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-white/30 flex-shrink-0 bg-white relative">
-              <img
-                src={CARIBBEAN_CINEMAS_PROFILE_IMAGE}
-                alt="Caribbean Cinemas"
-                className="w-full h-full object-contain"
-                loading="eager"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  const fallback = e.currentTarget.parentElement?.querySelector('[data-fallback]');
-                  if (fallback) fallback.classList.remove('hidden');
-                }}
-              />
-              <div data-fallback className="absolute inset-0 bg-gradient-to-tr from-valentine-pink to-valentine-red flex items-center justify-center hidden">
-                <span className="text-xl">🎬</span>
-              </div>
-            </div>
-            <div>
-              <p className="text-white font-body font-semibold text-sm">Caribbean Cinemas</p>
-              <p className="text-white/70 font-body text-xs">Ahora</p>
-            </div>
-          </div>
+        {/* Header del nuevo perfil apareciendo desde la derecha */}
+        <div className="absolute top-0 left-0 right-0 z-30 animate-slide-from-right bg-black/50 backdrop-blur-sm">
+          <ProfileHeader />
         </div>
 
         {/* Indicador visual de swipe */}
-        <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-30 text-white/60 text-sm font-body animate-fade-in">
+        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 z-30 text-white/60 text-sm font-body animate-fade-in">
           ← Deslizando al siguiente perfil
         </div>
       </div>
@@ -98,35 +104,14 @@ const ProfileSwitchAnimation: React.FC<ProfileSwitchAnimationProps> = ({
   // Fase 2: Transición breve (header completo visible)
   if (phase === 'transition') {
     return (
-      <div className="w-full h-full bg-black relative safe-area-all">
-        {/* Header del nuevo perfil: Caribbean Cinemas */}
+      <div className="stories-container bg-black">
+        {/* Header del nuevo perfil */}
         <div className="absolute top-0 left-0 right-0 z-30 bg-black/50 backdrop-blur-sm border-b border-white/10">
-          <div className="flex items-center gap-3 px-4 py-3">
-            <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-white/30 flex-shrink-0 bg-white relative">
-              <img
-                src={CARIBBEAN_CINEMAS_PROFILE_IMAGE}
-                alt="Caribbean Cinemas"
-                className="w-full h-full object-contain"
-                loading="eager"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  const fallback = e.currentTarget.parentElement?.querySelector('[data-fallback]');
-                  if (fallback) fallback.classList.remove('hidden');
-                }}
-              />
-              <div data-fallback className="absolute inset-0 bg-gradient-to-tr from-valentine-pink to-valentine-red flex items-center justify-center hidden">
-                <span className="text-xl">🎬</span>
-              </div>
-            </div>
-            <div>
-              <p className="text-white font-body font-semibold text-sm">Caribbean Cinemas</p>
-              <p className="text-white/70 font-body text-xs">Ahora</p>
-            </div>
-          </div>
+          <ProfileHeader />
         </div>
 
         {/* Contenido en transición */}
-        <div className="absolute inset-0 flex items-center justify-center pt-14">
+        <div className="flex-1 flex items-center justify-center">
           <div className="text-white/80 font-body animate-fade-in">Cargando story...</div>
         </div>
       </div>
@@ -135,42 +120,29 @@ const ProfileSwitchAnimation: React.FC<ProfileSwitchAnimationProps> = ({
 
   // Fase 3: Mostrar el story de invitación al cine (con header del nuevo perfil)
   return (
-    <div className="w-full h-full relative bg-black safe-area-all">
+    <div className="stories-container bg-black">
       {/* Header del perfil Caribbean Cinemas (como en Instagram Stories) */}
-      <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-b from-black/80 to-transparent pb-4">
-        <div className="flex items-center gap-3 px-4 py-3">
-          <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-white/30 flex-shrink-0 bg-white relative">
-            <img
-              src={CARIBBEAN_CINEMAS_PROFILE_IMAGE}
-              alt="Caribbean Cinemas"
-              className="w-full h-full object-contain"
-              loading="eager"
-              onError={(e) => {
-                e.currentTarget.style.display = 'none';
-                const fallback = e.currentTarget.parentElement?.querySelector('[data-fallback]');
-                if (fallback) fallback.classList.remove('hidden');
-              }}
-            />
-            <div data-fallback className="absolute inset-0 bg-gradient-to-tr from-valentine-pink to-valentine-red flex items-center justify-center hidden">
-              <span className="text-xl">🎬</span>
-            </div>
-          </div>
-          <div>
-            <p className="text-white font-body font-semibold text-sm">Caribbean Cinemas</p>
-            <p className="text-white/70 font-body text-xs">Ahora</p>
+      <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-b from-black/80 via-black/40 to-transparent">
+        <ProfileHeader />
+        {/* Barra de progreso simulada */}
+        <div className="px-4 pb-2">
+          <div className="h-[3px] bg-white/30 rounded-full overflow-hidden">
+            <div className="h-full bg-white w-full" />
           </div>
         </div>
       </div>
 
-      {/* Story de invitación al cine */}
-      <div className="w-full h-full pt-14">
-        <CinemaInviteSlide {...cinemaInvite} />
+      {/* Story de invitación al cine - con padding top para el header */}
+      <div className="w-full h-full flex flex-col pt-[72px]">
+        <div className="flex-1 min-h-0 overflow-hidden">
+          <CinemaInviteSlide {...cinemaInvite} />
+        </div>
       </div>
 
       {onComplete && (
         <button
           onClick={onComplete}
-          className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/70 font-body text-sm hover:text-white transition-colors z-40"
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/70 font-body text-sm hover:text-white transition-colors z-40 py-2 px-4"
         >
           Cerrar
         </button>

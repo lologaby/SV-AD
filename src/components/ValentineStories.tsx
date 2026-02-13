@@ -151,7 +151,7 @@ const ValentineStories: React.FC<ValentineStoriesProps> = ({
   // La librería ya tiene soporte nativo para hold-to-pause
 
   return (
-    <div className="w-full h-full min-h-0 overflow-hidden bg-black stories-container">
+    <div className="stories-container bg-black">
       <Stories
         stories={stories}
         defaultInterval={5000}
@@ -166,13 +166,23 @@ const ValentineStories: React.FC<ValentineStoriesProps> = ({
         storyStyles={{
           width: '100%',
           height: '100%',
+          maxHeight: '100%',
           objectFit: 'cover',
+          overflow: 'hidden',
+        }}
+        storyContainerStyles={{
+          width: '100%',
+          height: '100%',
+          maxHeight: '100%',
+          overflow: 'hidden',
         }}
         // Estilos personalizados para las barras de progreso
         progressContainerStyles={{
           height: '4px',
           maxWidth: '100%',
           backgroundColor: 'rgba(255, 255, 255, 0.3)',
+          position: 'relative',
+          zIndex: 50,
         }}
         progressWrapperStyles={{
           height: '4px',

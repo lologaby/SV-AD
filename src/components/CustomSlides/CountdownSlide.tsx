@@ -59,67 +59,69 @@ const CountdownSlide: React.FC<CountdownSlideProps> = ({
   };
 
   return (
-    <div className="w-full h-full bg-gradient-to-br from-valentine-pink via-valentine-light-pink to-white flex flex-col items-center justify-center px-6 relative overflow-hidden">
+    <div className="story-slide bg-gradient-to-br from-valentine-pink via-valentine-light-pink to-white relative">
       {/* Decoración de fondo */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-10">
-        <span className="text-[20rem]">💑</span>
+      <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
+        <span className="text-[12rem]">💑</span>
       </div>
       
-      {/* Contenido principal */}
-      <div className="relative z-10 text-center animate-fade-in">
-        <h2 className="text-3xl md:text-4xl font-display font-bold text-valentine-dark-red mb-8 drop-shadow-md">
-          {title}
-        </h2>
-        
-        {/* Fecha */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 mb-8 shadow-xl">
-          <p className="text-2xl md:text-3xl font-display text-valentine-dark-red font-semibold">
-            {formatDate(startDate)}
-          </p>
-        </div>
-        
-        {/* Tiempo juntos */}
-        <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
-          {timeTogether.years > 0 && (
-            <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg animate-slide-up">
-              <div className="text-4xl md:text-5xl font-display font-bold text-valentine-red">
-                {timeTogether.years}
-              </div>
-              <div className="text-sm md:text-base font-body text-valentine-dark-red mt-1">
-                {timeTogether.years === 1 ? 'Año' : 'Años'}
-              </div>
-            </div>
-          )}
+      {/* Contenido principal - flex centrado */}
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-6 relative z-10 min-h-0">
+        <div className="text-center animate-fade-in w-full max-w-sm">
+          <h2 className="text-2xl sm:text-3xl font-display font-bold text-valentine-dark-red mb-4 drop-shadow-md">
+            {title}
+          </h2>
           
-          <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg animate-slide-up" style={{ animationDelay: '0.1s' }}>
-            <div className="text-4xl md:text-5xl font-display font-bold text-valentine-red">
-              {timeTogether.months}
+          {/* Fecha */}
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 mb-4 shadow-xl">
+            <p className="text-lg sm:text-xl font-display text-valentine-dark-red font-semibold">
+              {formatDate(startDate)}
+            </p>
+          </div>
+          
+          {/* Tiempo juntos */}
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-4">
+            {timeTogether.years > 0 && (
+              <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg animate-slide-up">
+                <div className="text-2xl sm:text-3xl font-display font-bold text-valentine-red">
+                  {timeTogether.years}
+                </div>
+                <div className="text-xs sm:text-sm font-body text-valentine-dark-red">
+                  {timeTogether.years === 1 ? 'Año' : 'Años'}
+                </div>
+              </div>
+            )}
+            
+            <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg animate-slide-up" style={{ animationDelay: '0.1s' }}>
+              <div className="text-2xl sm:text-3xl font-display font-bold text-valentine-red">
+                {timeTogether.months}
+              </div>
+              <div className="text-xs sm:text-sm font-body text-valentine-dark-red">
+                {timeTogether.months === 1 ? 'Mes' : 'Meses'}
+              </div>
             </div>
-            <div className="text-sm md:text-base font-body text-valentine-dark-red mt-1">
-              {timeTogether.months === 1 ? 'Mes' : 'Meses'}
+            
+            <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg animate-slide-up" style={{ animationDelay: '0.2s' }}>
+              <div className="text-2xl sm:text-3xl font-display font-bold text-valentine-red">
+                {timeTogether.days}
+              </div>
+              <div className="text-xs sm:text-sm font-body text-valentine-dark-red">
+                {timeTogether.days === 1 ? 'Día' : 'Días'}
+              </div>
             </div>
           </div>
           
-          <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg animate-slide-up" style={{ animationDelay: '0.2s' }}>
-            <div className="text-4xl md:text-5xl font-display font-bold text-valentine-red">
-              {timeTogether.days}
-            </div>
-            <div className="text-sm md:text-base font-body text-valentine-dark-red mt-1">
-              {timeTogether.days === 1 ? 'Día' : 'Días'}
-            </div>
+          {/* Total de días */}
+          <div className="bg-white/80 backdrop-blur-sm rounded-lg p-3 shadow-lg mb-4">
+            <p className="text-base sm:text-lg font-body text-valentine-dark-red">
+              <span className="font-bold">{timeTogether.totalDays.toLocaleString()}</span> días juntos
+            </p>
           </div>
-        </div>
-        
-        {/* Total de días */}
-        <div className="mt-8 bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-lg">
-          <p className="text-lg md:text-xl font-body text-valentine-dark-red">
-            <span className="font-bold">{timeTogether.totalDays.toLocaleString()}</span> días de felicidad juntos
-          </p>
-        </div>
-        
-        {/* Emoji decorativo */}
-        <div className="mt-6 text-4xl">
-          💕✨💕
+          
+          {/* Emoji decorativo */}
+          <div className="text-2xl">
+            💕✨💕
+          </div>
         </div>
       </div>
     </div>

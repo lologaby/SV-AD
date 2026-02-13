@@ -17,28 +17,30 @@ const TextSlide: React.FC<TextSlideProps> = ({
 }) => {
   return (
     <div 
-      className={`w-full h-full flex flex-col items-center justify-center bg-gradient-to-br ${gradient} relative overflow-hidden`}
+      className={`story-slide bg-gradient-to-br ${gradient} relative`}
     >
       {/* Efecto de corazones decorativos */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-20">
-        <span className="text-9xl animate-pulse-custom">💕</span>
+      <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none">
+        <span className="text-8xl animate-pulse-custom">💕</span>
       </div>
       
-      {/* Contenido principal */}
-      <div className="relative z-10 px-6 text-center animate-fade-in">
-        <h1 className="text-4xl md:text-6xl font-display font-bold text-white mb-4 drop-shadow-lg">
-          {message}
-        </h1>
-        {subtitle && (
-          <p className="text-xl md:text-2xl font-body text-white/90 mt-4 drop-shadow-md">
-            {subtitle}
-          </p>
-        )}
+      {/* Contenido principal - centrado con flex */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-8 relative z-10">
+        <div className="text-center animate-fade-in max-w-full">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-white mb-4 drop-shadow-lg leading-tight">
+            {message}
+          </h1>
+          {subtitle && (
+            <p className="text-lg sm:text-xl md:text-2xl font-body text-white/90 mt-4 drop-shadow-md">
+              {subtitle}
+            </p>
+          )}
+        </div>
       </div>
       
       {/* Decoración inferior */}
-      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white/30">
-        <span className="text-4xl">✨</span>
+      <div className="flex-shrink-0 pb-8 flex justify-center">
+        <span className="text-3xl text-white/30">✨</span>
       </div>
     </div>
   );

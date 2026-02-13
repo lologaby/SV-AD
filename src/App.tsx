@@ -41,7 +41,7 @@ function App() {
   const [stage, setStage] = useState<Stage>('quiz')
 
   return (
-    <div className="w-screen h-screen-dynamic overflow-hidden bg-black">
+    <div className="h-screen-safe w-screen bg-black">
       {stage === 'quiz' && (
         <WorthyQuiz
           questions={QUIZ_QUESTIONS}
@@ -67,7 +67,7 @@ function App() {
             date: '14 de febrero, 2026',
             time: '7:10 PM',
             seats: 'K10, K11',
-            screen: 'Screen 7',
+            screen: 'Sala 7',
             qrImageUrl: 'qr-tickets.png',
             ticketNumber: '#9338842',
             posterUrl: 'poster-entre-las-vias.png',
