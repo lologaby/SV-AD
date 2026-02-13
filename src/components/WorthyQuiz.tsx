@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { playCorrect, playWrong } from '../utils/duoSounds';
 
-// Opcional: pon correct.mp3 y wrong.mp3 en public/sounds/ para sonidos tipo Duolingo
-const USE_SOUND_FILES = false;
+// Sonido correcto: public/sounds/correct.mp3 (Duolingo). Incorrecto: wrong.mp3 o tono generado.
+const USE_SOUND_FILES = true;
 
 export interface QuizQuestion {
   question: string;
@@ -42,16 +42,18 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   const [showShrek, setShowShrek] = useState(false);
   const [gifSrc, setGifSrc] = useState<string>(passGifUrl ?? SHREK_GIF_URL);
   const [gifTriedFallback, setGifTriedFallback] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [lastAnswerCorrect, setLastAnswerCorrect] = useState(false);
 
   const currentQuestion = questions[currentIndex];
   const isLastQuestion = currentIndex === questions.length - 1;
 
   const handleSelect = (optionIndex: number) => {
-    if (selectedIndex !== null) return; // ya respondió
+    if (selectedIndex !== null) return;
     setSelectedIndex(optionIndex);
 
     const isCorrect = optionIndex === currentQuestion.correctIndex;
-    const newCorrectCount = correctCount + (isCorrect ? 1 : 0);
+    setLastAnswerCorrect(isCorrect);
     if (isCorrect) {
       setCorrectCount((c) => c + 1);
       if (USE_SOUND_FILES) {
@@ -70,25 +72,24 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
         playWrong();
       }
     }
+    setShowFeedback(true);
+  };
 
-    // Avanzar después de un momento
-    setTimeout(() => {
-      if (isLastQuestion) {
-        const didPass = newCorrectCount >= minCorrect;
-        setPassed(didPass);
-        if (didPass) {
-          // Si pasó, mostrar GIF de Shrek con botón en la misma pantalla
-          setShowShrek(true);
-          setFinished(true); // Mostrar botón inmediatamente
-        } else {
-          // Si no pasó, mostrar resultado directamente
-          setFinished(true);
-        }
+  const handleContinue = () => {
+    setShowFeedback(false);
+    if (isLastQuestion) {
+      const didPass = correctCount >= minCorrect;
+      setPassed(didPass);
+      if (didPass) {
+        setShowShrek(true);
+        setFinished(true);
       } else {
-        setCurrentIndex((i) => i + 1);
-        setSelectedIndex(null);
+        setFinished(true);
       }
-    }, 800);
+    } else {
+      setCurrentIndex((i) => i + 1);
+      setSelectedIndex(null);
+    }
   };
 
   const handleRetry = () => {
@@ -98,9 +99,13 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
     setFinished(false);
     setPassed(false);
     setShowShrek(false);
+    setShowFeedback(false);
     setGifSrc(passGifUrl ?? SHREK_GIF_URL);
     setGifTriedFallback(false);
   };
+
+  const progressPercent = ((currentIndex + (showFeedback ? 1 : 0)) / questions.length) * 100;
+  const hearts = 3; // decorativo tipo Duolingo
 
   // Mostrar GIF de Shrek con botón cuando pasan la prueba
   if (finished && passed && showShrek) {
@@ -211,34 +216,40 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
     );
   }
 
-  // Estilo Duolingo: fondo blanco, barra de progreso, tiles redondeados, colores Duo
+  // Estilo Duolingo como en las capturas: barra verde arriba, tiles, feedback abajo
   return (
-    <div className="w-full min-h-screen bg-duo-snow flex flex-col font-duo">
-      {/* Barra de progreso estilo Duolingo (puntos por pregunta) */}
-      <div className="flex justify-center gap-2 pt-6 pb-4 px-4">
-        {questions.map((_, i) => (
+    <div className="w-full min-h-screen bg-duo-snow flex flex-col font-duo safe-area-pb">
+      {/* Top bar Duolingo: barra de progreso verde continua + icono corazones */}
+      <header className="flex items-center justify-between px-4 pt-4 pb-2">
+        <button type="button" className="w-10 h-10 flex items-center justify-center text-gray-400" aria-label="Cerrar">
+          <span className="text-2xl font-bold">×</span>
+        </button>
+        <div className="flex-1 mx-4 h-3 bg-gray-200 rounded-full overflow-hidden">
           <div
-            key={i}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              i < currentIndex
-                ? 'bg-duo-green w-8'
-                : i === currentIndex
-                ? 'bg-duo-blue w-10'
-                : 'bg-gray-200 w-2'
-            }`}
+            className="h-full bg-duo-green rounded-full transition-all duration-400 ease-out"
+            style={{ width: `${progressPercent}%` }}
           />
-        ))}
-      </div>
+        </div>
+        <div className="flex items-center gap-1 text-duo-purple font-duo font-bold">
+          <span className="text-xl">⚡</span>
+          <span>{hearts}</span>
+        </div>
+      </header>
 
-      {/* Pregunta (tipografía bold, texto oscuro) */}
-      <div className="px-6 pt-4 pb-8">
+      {/* Título del ejercicio */}
+      <p className="text-duo-eel font-duo font-bold text-lg text-center px-4 pt-2 pb-6">
+        Elige la respuesta correcta
+      </p>
+
+      {/* Pregunta */}
+      <div className="px-6 pb-6">
         <p className="text-duo-eel font-duo font-bold text-xl md:text-2xl text-center leading-tight">
           {currentQuestion.question}
         </p>
       </div>
 
-      {/* Opciones: tiles blancos con borde, al tocar → verde o rojo */}
-      <div className="flex-1 px-6 pb-8 space-y-3 max-w-lg mx-auto w-full">
+      {/* Opciones: tiles como en Duolingo (verde claro/oscuro, rojo claro/oscuro, gris) */}
+      <div className="flex-1 px-6 pb-4 space-y-3 max-w-lg mx-auto w-full">
         {currentQuestion.options.map((option, i) => {
           const selected = selectedIndex === i;
           const correct = i === currentQuestion.correctIndex;
@@ -251,32 +262,59 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
               key={i}
               onClick={() => handleSelect(i)}
               disabled={selectedIndex !== null}
-              className={`w-full py-4 px-5 rounded-2xl font-duo font-bold text-lg text-left transition-all duration-200 border-2 active:scale-[0.98] ${
+              className={`w-full py-4 px-5 rounded-2xl font-duo font-bold text-lg text-left transition-all duration-200 active:scale-[0.98] ${
                 showResult
                   ? isCorrectChoice
-                    ? 'bg-duo-green border-duo-green text-white shadow-md'
+                    ? 'bg-duo-green-bg text-duo-green-dark'
                     : isWrongChoice
-                    ? 'bg-duo-red border-duo-red text-white shadow-md'
+                    ? 'bg-duo-red-bg text-duo-red-dark'
                     : correct
-                    ? 'bg-duo-green border-duo-green text-white'
-                    : 'bg-gray-50 border-gray-200 text-duo-eel'
-                  : 'bg-white border-gray-300 text-duo-eel hover:border-duo-blue hover:bg-gray-50'
+                    ? 'bg-duo-green-bg text-duo-green-dark'
+                    : 'bg-gray-100 text-gray-500'
+                  : 'bg-white border-2 border-gray-300 text-duo-eel hover:border-duo-blue hover:bg-gray-50'
               }`}
             >
               <span className="flex items-center justify-between">
                 {option}
-                {showResult && correct && <span className="text-2xl">✓</span>}
-                {showResult && isWrongChoice && <span className="text-2xl">✗</span>}
+                {showResult && correct && <span className="text-duo-green-dark text-2xl">✓</span>}
+                {showResult && isWrongChoice && <span className="text-duo-red-dark text-2xl">✗</span>}
               </span>
             </button>
           );
         })}
       </div>
 
-      {/* Pie tipo Duolingo: "Elige la respuesta correcta" */}
-      <p className="text-center text-gray-400 font-duo text-sm pb-6">
-        Elige la respuesta correcta
-      </p>
+      {/* Panel de feedback inferior (como en las fotos Duolingo) */}
+      {showFeedback && (
+        <div
+          className={`mt-auto rounded-t-3xl px-6 pt-8 pb-10 ${
+            lastAnswerCorrect ? 'bg-duo-green-bg' : 'bg-duo-red-bg'
+          }`}
+        >
+          <div className={`flex items-center justify-center gap-2 mb-6 ${lastAnswerCorrect ? 'text-duo-green-dark' : 'text-duo-red-dark'}`}>
+            {lastAnswerCorrect ? (
+              <>
+                <span className="text-3xl">✓</span>
+                <span className="font-duo font-bold text-2xl">¡Perfecto!</span>
+              </>
+            ) : (
+              <>
+                <span className="text-3xl">✗</span>
+                <span className="font-duo font-bold text-xl">Sigue practicando</span>
+              </>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={handleContinue}
+            className={`w-full py-4 rounded-2xl font-duo font-bold text-lg uppercase tracking-wide text-white transition-transform active:scale-[0.98] ${
+              lastAnswerCorrect ? 'bg-duo-green hover:bg-duo-green-light' : 'bg-duo-red hover:opacity-95'
+            }`}
+          >
+            {lastAnswerCorrect ? 'Continuar' : 'Entendido'}
+          </button>
+        </div>
+      )}
     </div>
   );
 };
