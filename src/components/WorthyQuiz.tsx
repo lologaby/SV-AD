@@ -28,6 +28,8 @@ interface WorthyQuizProps {
  * Quiz de "¿Eres digno/a?" antes de poder ver las stories.
  * Si acierta las preguntas necesarias, llama onPass() para mostrar el contenido.
  */
+const EXPECTED_NAME = 'Dayralee';
+
 const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   questions,
   minCorrect = 2,
@@ -35,6 +37,12 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   passGifUrl = SHREK_GIF_URL,
   passGifFallbackUrl,
 }) => {
+  const [phase, setPhase] = useState<'welcome' | 'name' | 'quiz'>('welcome');
+  const [saidNo, setSaidNo] = useState(false);
+  const [nameInput, setNameInput] = useState('');
+  const [nameError, setNameError] = useState(false);
+  const [userName, setUserName] = useState('');
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
@@ -45,6 +53,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   const [gifTriedFallback, setGifTriedFallback] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [lastAnswerCorrect, setLastAnswerCorrect] = useState(false);
+  const [lives, setLives] = useState(99);
 
   const currentQuestion = questions[currentIndex];
   const isLastQuestion = currentIndex === questions.length - 1;
@@ -63,6 +72,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
         playCorrect();
       }
     } else {
+      setLives((l) => Math.max(0, l - 1));
       if (USE_SOUND_FILES) {
         playSoundFromFile('wrong');
       } else {
@@ -74,6 +84,11 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
 
   const handleContinue = () => {
     setShowFeedback(false);
+    if (lives <= 0) {
+      setPassed(false);
+      setFinished(true);
+      return;
+    }
     if (isLastQuestion) {
       const didPass = correctCount >= minCorrect;
       setPassed(didPass);
@@ -97,15 +112,94 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
     setPassed(false);
     setShowShrek(false);
     setShowFeedback(false);
+    setLives(99);
     setGifSrc(passGifUrl ?? SHREK_GIF_URL);
     setGifTriedFallback(false);
   };
 
   const progressPercent = ((currentIndex + (showFeedback ? 1 : 0)) / questions.length) * 100;
-  const totalWrong = currentIndex - correctCount + (selectedIndex !== null && !lastAnswerCorrect ? 1 : 0);
-  const heartsLeft = Math.max(0, 3 - totalWrong);
   const showDuoInQuestion = currentIndex % 2 === 0; // Duo en preguntas pares
 
+  // ——— Fase: Bienvenida ———
+  if (phase === 'welcome') {
+    return (
+      <div className="w-full min-h-screen bg-gradient-to-b from-pink-50 to-rose-100 flex flex-col items-center justify-center px-6 py-10">
+        <p className="text-2xl md:text-3xl font-duo font-bold text-rose-700 mb-2">Hola Muñeca!</p>
+        <p className="text-duo-eel font-duo text-lg text-center mb-8">¿Esta invitación romántica es para ti?</p>
+        {saidNo ? (
+          <div className="flex flex-col items-center gap-4">
+            <p className="text-rose-600 font-duo text-center">Esta invitación es solo para ti 💕</p>
+            <button
+              type="button"
+              onClick={() => { setSaidNo(false); setPhase('name'); }}
+              className="px-8 py-3 rounded-2xl bg-rose-500 text-white font-duo font-bold shadow-lg hover:bg-rose-600 transition"
+            >
+              Sí, es para mí
+            </button>
+          </div>
+        ) : (
+          <div className="flex gap-4">
+            <button
+              type="button"
+              onClick={() => setPhase('name')}
+              className="px-8 py-3 rounded-2xl bg-duo-green text-white font-duo font-bold shadow-lg hover:bg-duo-green-dark transition"
+            >
+              Sí
+            </button>
+            <button
+              type="button"
+              onClick={() => setSaidNo(true)}
+              className="px-8 py-3 rounded-2xl bg-gray-300 text-gray-700 font-duo font-bold hover:bg-gray-400 transition"
+            >
+              No
+            </button>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ——— Fase: Escribir nombre (debe ser Dayralee) ———
+  if (phase === 'name') {
+    const handleNameSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      const name = nameInput.trim();
+      if (name.toLowerCase() !== EXPECTED_NAME.toLowerCase()) {
+        setNameError(true);
+        return;
+      }
+      setNameError(false);
+      setUserName(name);
+      setPhase('quiz');
+    };
+    return (
+      <div className="w-full min-h-screen bg-gradient-to-b from-pink-50 to-rose-100 flex flex-col items-center justify-center px-6 py-10">
+        <p className="text-xl font-duo font-bold text-rose-700 mb-2">Escribe tu nombre</p>
+        <form onSubmit={handleNameSubmit} className="w-full max-w-xs flex flex-col items-center gap-4">
+          <input
+            type="text"
+            value={nameInput}
+            onChange={(e) => { setNameInput(e.target.value); setNameError(false); }}
+            placeholder="Tu nombre"
+            className="w-full px-4 py-3 rounded-xl border-2 border-rose-200 focus:border-rose-500 focus:outline-none font-duo text-center text-lg"
+            autoFocus
+            autoComplete="off"
+          />
+          {nameError && (
+            <p className="text-red-600 font-duo text-sm">Ese no es tu nombre. Intenta de nuevo.</p>
+          )}
+          <button
+            type="submit"
+            className="px-8 py-3 rounded-2xl bg-duo-green text-white font-duo font-bold shadow-lg hover:bg-duo-green-dark transition"
+          >
+            Continuar
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  // ——— Fase: Quiz y pantallas finales ———
   // Pantalla de éxito: estilo Duolingo + Shrek + Ver mi sorpresa (sin tocar lo de Instagram)
   if (finished && passed && showShrek) {
     return (
@@ -216,21 +310,14 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
             style={{ width: `${progressPercent}%` }}
           />
         </div>
-        <div className="flex items-center gap-0.5">
-          {[1, 2, 3].map((i) => (
-            <span
-              key={i}
-              className={`text-xl ${i <= heartsLeft ? 'text-duo-red' : 'text-gray-300'}`}
-              aria-hidden
-            >
-              ♥
-            </span>
-          ))}
+        <div className="flex items-center gap-1 text-duo-red font-duo font-bold text-lg">
+          <span aria-hidden>♥</span>
+          <span>{lives}</span>
         </div>
       </header>
 
       {/* Tema: Nuestro amor es un Duolingo + racha */}
-      <div className="flex items-center justify-center gap-2 pt-2 pb-2">
+      <div className="flex items-center justify-center gap-2 pt-2 pb-1">
         <DuoOwl size={36} mood="happy" />
         <p className="text-duo-green-dark font-duo font-bold text-base">
           Nuestro amor es un Duolingo
@@ -241,6 +328,9 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
           </span>
         )}
       </div>
+      <p className="text-rose-700 font-duo text-sm text-center px-4 pb-4">
+        {userName}, demuestra que eres digna de esta cita especial romántica secreta.
+      </p>
 
       {/* Instrucción */}
       <p className="text-gray-500 font-duo text-sm text-center px-4 pb-4">
