@@ -48,6 +48,28 @@ body {
   }
 }
 
+@keyframes swipeLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0.3;
+  }
+}
+
+@keyframes slideFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 .animate-fade-in {
   animation: fadeIn 0.6s ease-out;
 }
@@ -58,6 +80,14 @@ body {
 
 .animate-pulse-custom {
   animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-swipe-left {
+  animation: swipeLeft 0.4s ease-out forwards;
+}
+
+.animate-slide-from-right {
+  animation: slideFromRight 0.4s ease-out forwards;
 }
 
 /* Estilos para react-insta-stories */
