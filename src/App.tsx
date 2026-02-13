@@ -35,6 +35,7 @@ function App() {
           questions={QUIZ_QUESTIONS}
           minCorrect={2}
           onPass={() => setStage('stories')}
+          passGifUrl="shrek-approval.png"
         />
       )}
 
@@ -47,8 +48,6 @@ function App() {
 
       {stage === 'profile_switch' && (
         <ProfileSwitchAnimation
-          currentProfileImage="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80"
-          currentProfileName="Mi Amor"
           cinemaInvite={{
             movieTitle: 'Película Sorpresa 🎬',
             cinema: 'Caribbean Cinemas Plaza Escorial',

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import CinemaInviteSlide from './CustomSlides/CinemaInviteSlide';
 
+/** Foto de perfil del "perfil" Caribbean Cinemas (logo oficial, mismo que IG) */
+const CARIBBEAN_CINEMAS_PROFILE_IMAGE = 'https://caribbeancinemas.com/img/logo.png';
+
 interface ProfileSwitchAnimationProps {
-  /** Avatar/url del perfil actual (el que acaba de terminar) */
-  currentProfileImage?: string;
-  /** Nombre del perfil actual */
-  currentProfileName?: string;
   /** Al terminar la animación (después de mostrar la invitación) */
   onComplete?: () => void;
   /** Props para personalizar la invitación al cine */
@@ -58,16 +57,27 @@ const ProfileSwitchAnimation: React.FC<ProfileSwitchAnimationProps> = ({
           </div>
         </div>
 
-        {/* Header del nuevo perfil apareciendo desde la derecha */}
+        {/* Header del nuevo perfil (Caribbean Cinemas) apareciendo desde la derecha */}
         <div className="absolute top-0 left-0 right-0 z-30 animate-slide-from-right">
           <div className="flex items-center gap-3 px-4 py-3 bg-black/50 backdrop-blur-sm">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-valentine-pink to-valentine-red p-0.5 ring-2 ring-valentine-pink">
-              <div className="w-full h-full rounded-full bg-black flex items-center justify-center">
-                <span className="text-xl">💌</span>
+            <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-white/30 flex-shrink-0 bg-white relative">
+              <img
+                src={CARIBBEAN_CINEMAS_PROFILE_IMAGE}
+                alt="Caribbean Cinemas"
+                className="w-full h-full object-contain"
+                loading="eager"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  const fallback = e.currentTarget.parentElement?.querySelector('[data-fallback]');
+                  if (fallback) fallback.classList.remove('hidden');
+                }}
+              />
+              <div data-fallback className="absolute inset-0 bg-gradient-to-tr from-valentine-pink to-valentine-red flex items-center justify-center hidden">
+                <span className="text-xl">🎬</span>
               </div>
             </div>
             <div>
-              <p className="text-white font-body font-semibold text-sm">Invitación</p>
+              <p className="text-white font-body font-semibold text-sm">Caribbean Cinemas</p>
               <p className="text-white/70 font-body text-xs">Ahora</p>
             </div>
           </div>
@@ -85,16 +95,27 @@ const ProfileSwitchAnimation: React.FC<ProfileSwitchAnimationProps> = ({
   if (phase === 'transition') {
     return (
       <div className="w-full h-full bg-black relative">
-        {/* Header del nuevo perfil */}
+        {/* Header del nuevo perfil: Caribbean Cinemas */}
         <div className="absolute top-0 left-0 right-0 z-30 bg-black/50 backdrop-blur-sm border-b border-white/10">
           <div className="flex items-center gap-3 px-4 py-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-valentine-pink to-valentine-red p-0.5 ring-2 ring-valentine-pink">
-              <div className="w-full h-full rounded-full bg-black flex items-center justify-center">
-                <span className="text-xl">💌</span>
+            <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-white/30 flex-shrink-0 bg-white relative">
+              <img
+                src={CARIBBEAN_CINEMAS_PROFILE_IMAGE}
+                alt="Caribbean Cinemas"
+                className="w-full h-full object-contain"
+                loading="eager"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  const fallback = e.currentTarget.parentElement?.querySelector('[data-fallback]');
+                  if (fallback) fallback.classList.remove('hidden');
+                }}
+              />
+              <div data-fallback className="absolute inset-0 bg-gradient-to-tr from-valentine-pink to-valentine-red flex items-center justify-center hidden">
+                <span className="text-xl">🎬</span>
               </div>
             </div>
             <div>
-              <p className="text-white font-body font-semibold text-sm">Invitación</p>
+              <p className="text-white font-body font-semibold text-sm">Caribbean Cinemas</p>
               <p className="text-white/70 font-body text-xs">Ahora</p>
             </div>
           </div>
@@ -111,16 +132,27 @@ const ProfileSwitchAnimation: React.FC<ProfileSwitchAnimationProps> = ({
   // Fase 3: Mostrar el story de invitación al cine (con header del nuevo perfil)
   return (
     <div className="w-full h-full relative bg-black">
-      {/* Header del nuevo perfil (como en Instagram Stories) */}
+      {/* Header del perfil Caribbean Cinemas (como en Instagram Stories) */}
       <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-b from-black/80 to-transparent pb-4">
         <div className="flex items-center gap-3 px-4 py-3">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-valentine-pink to-valentine-red p-0.5 ring-2 ring-valentine-pink">
-            <div className="w-full h-full rounded-full bg-black flex items-center justify-center">
-              <span className="text-xl">💌</span>
+          <div className="w-10 h-10 rounded-full overflow-hidden ring-2 ring-white/30 flex-shrink-0 bg-white relative">
+            <img
+              src={CARIBBEAN_CINEMAS_PROFILE_IMAGE}
+              alt="Caribbean Cinemas"
+              className="w-full h-full object-contain"
+              loading="eager"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                const fallback = e.currentTarget.parentElement?.querySelector('[data-fallback]');
+                if (fallback) fallback.classList.remove('hidden');
+              }}
+            />
+            <div data-fallback className="absolute inset-0 bg-gradient-to-tr from-valentine-pink to-valentine-red flex items-center justify-center hidden">
+              <span className="text-xl">🎬</span>
             </div>
           </div>
           <div>
-            <p className="text-white font-body font-semibold text-sm">Invitación</p>
+            <p className="text-white font-body font-semibold text-sm">Caribbean Cinemas</p>
             <p className="text-white/70 font-body text-xs">Ahora</p>
           </div>
         </div>

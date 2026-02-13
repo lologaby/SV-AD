@@ -6,10 +6,15 @@ export interface QuizQuestion {
   correctIndex: number;
 }
 
+/** GIF de Shrek aprobando (Giphy = URLs estables). Alternativa: pon tu GIF en public/shrek-approval.gif */
+const SHREK_GIF_URL = 'https://media.giphy.com/media/TIGP3k4gNAqvza2KJK/giphy.gif';
+
 interface WorthyQuizProps {
   questions: QuizQuestion[];
   minCorrect?: number;
   onPass: () => void;
+  /** URL opcional del GIF al pasar (ej. /shrek-approval.gif si está en public/) */
+  passGifUrl?: string;
 }
 
 /**
@@ -20,6 +25,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   questions,
   minCorrect = 2,
   onPass,
+  passGifUrl = SHREK_GIF_URL,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -45,9 +51,10 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
         const didPass = newCorrectCount >= minCorrect;
         setPassed(didPass);
         if (didPass) {
-          // Si pasó, mostrar GIF de Shrek primero
+          // Si pasó, mostrar GIF de Shrek primero; luego pantalla con botón
           setShowShrek(true);
           setTimeout(() => {
+            setShowShrek(false);
             setFinished(true);
           }, 2500); // Duración del GIF (~2.3s) + pequeño delay
         } else {
@@ -70,17 +77,25 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
     setShowShrek(false);
   };
 
-  // Mostrar GIF de Shrek cuando pasan la prueba
+  // Mostrar GIF de Shrek cuando pasan la prueba (Giphy = URLs estables)
   if (showShrek && passed) {
     return (
       <div className="w-full h-full min-h-screen bg-gradient-to-br from-valentine-dark-red via-valentine-red to-valentine-pink flex flex-col items-center justify-center px-6 text-center">
         <div className="mb-6 animate-fade-in">
           <img
-            src="https://media.tenor.com/5Ry7jGuGp7YAAAAC/shrek-shrek-meme.gif"
+            src={passGifUrl}
             alt="Shrek aprobando"
             className="w-full max-w-md rounded-2xl shadow-2xl"
             style={{ maxHeight: '400px', objectFit: 'contain' }}
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              const next = e.currentTarget.nextElementSibling;
+              if (next) (next as HTMLElement).classList.remove('hidden');
+            }}
           />
+          <div className="hidden text-8xl mb-6 animate-pulse-custom" aria-hidden>
+            💚
+          </div>
         </div>
         <h1 className="text-3xl md:text-4xl font-display font-bold text-white mb-2 animate-fade-in">
           ¡Eres digno/a! 🎉
