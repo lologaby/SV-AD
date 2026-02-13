@@ -154,41 +154,43 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
 
   const progressPercent = ((currentIndex + (showFeedback ? 1 : 0)) / questions.length) * 100;
 
-  // ——— Fase: Bienvenida ———
+  // ——— Fase: Bienvenida (gradiente holográfico / tornasol) ———
   if (phase === 'welcome') {
     return (
-      <div className="w-full min-h-[100dvh] min-h-screen bg-gradient-to-b from-pink-50 to-rose-100 flex flex-col items-center justify-center px-6 py-10 pt-[max(2.5rem,env(safe-area-inset-top))] pb-[max(2.5rem,env(safe-area-inset-bottom))] pl-[max(1.5rem,env(safe-area-inset-left))] pr-[max(1.5rem,env(safe-area-inset-right))]">
-        <p className="text-2xl md:text-3xl font-duo font-bold text-rose-700 mb-2">Hola Muñeca!</p>
-        <p className="text-duo-eel font-duo text-lg text-center mb-8">¿Esta invitación romántica es para ti?</p>
-        {saidNo ? (
-          <div className="flex flex-col items-center gap-4">
-            <p className="text-rose-600 font-duo text-center">Esta invitación es solo para ti 💕</p>
-            <button
-              type="button"
-              onClick={() => { setSaidNo(false); setPhase('name'); }}
-              className="min-h-[44px] px-8 py-3 rounded-2xl bg-rose-500 text-white font-duo font-bold shadow-lg hover:bg-rose-600 transition"
-            >
-              Sí, es para mí
-            </button>
-          </div>
-        ) : (
-          <div className="flex gap-4">
-            <button
-              type="button"
-              onClick={() => setPhase('name')}
-              className="min-h-[44px] px-8 py-3 rounded-2xl bg-duo-green text-white font-duo font-bold shadow-lg hover:bg-duo-green-dark transition"
-            >
-              Sí
-            </button>
-            <button
-              type="button"
-              onClick={() => setSaidNo(true)}
-              className="min-h-[44px] px-8 py-3 rounded-2xl bg-gray-300 text-gray-700 font-duo font-bold hover:bg-gray-400 transition"
-            >
-              No
-            </button>
-          </div>
-        )}
+      <div className="w-full min-h-screen relative overflow-hidden bg-gradient-holographic flex flex-col items-center justify-center px-6 py-10">
+        <div className="relative z-10 flex flex-col items-center">
+          <p className="text-2xl md:text-3xl font-duo font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)] mb-2">Hola Muñeca!</p>
+          <p className="text-white/95 font-duo text-lg text-center mb-8 drop-shadow-[0_1px_4px_rgba(0,0,0,0.2)]">¿Esta invitación romántica es para ti?</p>
+          {saidNo ? (
+            <div className="flex flex-col items-center gap-4">
+              <p className="text-white/90 font-duo text-center drop-shadow-[0_1px_3px_rgba(0,0,0,0.2)]">Esta invitación es solo para ti 💕</p>
+              <button
+                type="button"
+                onClick={() => { setSaidNo(false); setPhase('name'); }}
+                className="min-h-[44px] px-8 py-3 rounded-2xl bg-white/90 text-purple-700 font-duo font-bold shadow-lg hover:bg-white hover:scale-[1.02] transition backdrop-blur-sm"
+              >
+                Sí, es para mí
+              </button>
+            </div>
+          ) : (
+            <div className="flex gap-4">
+              <button
+                type="button"
+                onClick={() => setPhase('name')}
+                className="min-h-[44px] px-8 py-3 rounded-2xl bg-duo-green text-white font-duo font-bold shadow-lg hover:bg-duo-green-light hover:scale-[1.02] transition"
+              >
+                Sí
+              </button>
+              <button
+                type="button"
+                onClick={() => setSaidNo(true)}
+                className="min-h-[44px] px-8 py-3 rounded-2xl bg-white/80 text-gray-700 font-duo font-bold hover:bg-white/90 hover:scale-[1.02] transition backdrop-blur-sm"
+              >
+                No
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     );
   }
@@ -207,28 +209,30 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
       setPhase('quiz');
     };
     return (
-      <div className="w-full min-h-[100dvh] min-h-screen bg-gradient-to-b from-pink-50 to-rose-100 flex flex-col items-center justify-center px-6 py-10 pt-[max(2.5rem,env(safe-area-inset-top))] pb-[max(2.5rem,env(safe-area-inset-bottom))] pl-[max(1.5rem,env(safe-area-inset-left))] pr-[max(1.5rem,env(safe-area-inset-right))]">
-        <p className="text-xl font-duo font-bold text-rose-700 mb-2">Escribe tu nombre</p>
-        <form onSubmit={handleNameSubmit} className="w-full max-w-xs flex flex-col items-center gap-4">
-          <input
-            type="text"
-            value={nameInput}
-            onChange={(e) => { setNameInput(e.target.value); setNameError(false); }}
-            placeholder="Tu nombre"
-            className="w-full px-4 py-3 rounded-xl border-2 border-rose-200 focus:border-rose-500 focus:outline-none font-duo text-center text-lg"
-            autoFocus
-            autoComplete="off"
-          />
-          {nameError && (
-            <p className="text-red-600 font-duo text-sm">Ese no es tu nombre. Intenta de nuevo.</p>
-          )}
-          <button
-            type="submit"
-            className="min-h-[44px] px-8 py-3 rounded-2xl bg-duo-green text-white font-duo font-bold shadow-lg hover:bg-duo-green-dark transition"
-          >
-            Continuar
-          </button>
-        </form>
+      <div className="w-full min-h-screen relative overflow-hidden bg-gradient-holographic flex flex-col items-center justify-center px-6 py-10">
+        <div className="relative z-10 flex flex-col items-center w-full max-w-xs">
+          <p className="text-xl font-duo font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)] mb-2">Escribe tu nombre</p>
+          <form onSubmit={handleNameSubmit} className="w-full flex flex-col items-center gap-4">
+            <input
+              type="text"
+              value={nameInput}
+              onChange={(e) => { setNameInput(e.target.value); setNameError(false); }}
+              placeholder="Tu nombre"
+              className="w-full px-4 py-3 rounded-xl border-2 border-white/50 bg-white/90 focus:border-white focus:ring-2 focus:ring-white/50 focus:outline-none font-duo text-center text-lg text-gray-800 placeholder-gray-500 backdrop-blur-sm"
+              autoFocus
+              autoComplete="off"
+            />
+            {nameError && (
+              <p className="text-white font-duo text-sm drop-shadow-[0_1px_3px_rgba(0,0,0,0.3)]">Ese no es tu nombre. Intenta de nuevo.</p>
+            )}
+            <button
+              type="submit"
+              className="min-h-[44px] px-8 py-3 rounded-2xl bg-duo-green text-white font-duo font-bold shadow-lg hover:bg-duo-green-light hover:scale-[1.02] transition"
+            >
+              Continuar
+            </button>
+          </form>
+        </div>
       </div>
     );
   }
@@ -237,7 +241,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   // Pantalla de éxito: estilo Duolingo + Shrek + Ver mi sorpresa (sin tocar lo de Instagram)
   if (finished && passed && showShrek) {
     return (
-      <div className="w-full min-h-[100dvh] min-h-screen bg-duo-snow flex flex-col items-center px-6 pt-8 pb-10 pt-[max(2rem,env(safe-area-inset-top))] pb-[max(2.5rem,env(safe-area-inset-bottom))] pl-[max(1.5rem,env(safe-area-inset-left))] pr-[max(1.5rem,env(safe-area-inset-right))]">
+      <div className="w-full min-h-screen bg-duo-snow flex flex-col items-center px-6 pt-8 pb-10">
         {/* Duo oficial (design.duolingo.com) celebrando */}
         <div className="mb-4 animate-fade-in">
           <img src={`${DUOLINGO_ASSETS_BASE}/${DUO_SVG_IDS[0]}`} alt="" className="h-24 w-auto object-contain" width={100} height={100} />
@@ -309,7 +313,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
 
   if (finished && !passed) {
     return (
-      <div className="w-full min-h-[100dvh] min-h-screen bg-duo-red-bg flex flex-col items-center justify-center px-6 py-10 pt-[max(2.5rem,env(safe-area-inset-top))] pb-[max(2.5rem,env(safe-area-inset-bottom))] pl-[max(1.5rem,env(safe-area-inset-left))] pr-[max(1.5rem,env(safe-area-inset-right))]">
+      <div className="w-full min-h-screen bg-duo-red-bg flex flex-col items-center justify-center px-6 py-10">
         <img src={`${DUOLINGO_ASSETS_BASE}/${DUO_SVG_IDS[1]}`} alt="" className="h-28 w-auto object-contain mb-6" width={120} height={120} />
         <h1 className="text-duo-red-dark font-duo font-bold text-2xl mb-2 text-center">
           Sigue practicando
@@ -332,31 +336,15 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
 
   const isImageQuestion = currentQuestion.questionType === 'image' && currentQuestion.imageOptions && currentQuestion.imageOptions.length >= 4;
 
-  // Personajes de fondo/lateral (1-2 por pregunta) como en las capturas Duolingo
-  const bgChar1 = QUESTION_CHARACTER_IDS[currentIndex % QUESTION_CHARACTER_IDS.length];
-  const bgChar2 = QUESTION_CHARACTER_IDS[(currentIndex + 7) % QUESTION_CHARACTER_IDS.length];
+  // Personajes al frente, integrados con la pregunta (1-2 por pregunta)
+  const char1 = QUESTION_CHARACTER_IDS[currentIndex % QUESTION_CHARACTER_IDS.length];
+  const char2 = QUESTION_CHARACTER_IDS[(currentIndex + 7) % QUESTION_CHARACTER_IDS.length];
 
-  // Estilo Duolingo como en las capturas: barra verde arriba, tiles, feedback abajo
+  // Estilo Duolingo: barra verde arriba, tiles, feedback abajo
   return (
-    <div className="w-full min-h-[100dvh] min-h-screen bg-duo-snow flex flex-col font-duo relative overflow-hidden pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
-      {/* Personajes en fondo/lateral (1-2 por pregunta) */}
-      <img
-        src={`${DUOLINGO_ASSETS_BASE}/${bgChar1}`}
-        alt=""
-        className="absolute left-2 bottom-24 w-20 h-20 object-contain opacity-80 pointer-events-none select-none"
-        width={80}
-        height={80}
-      />
-      <img
-        src={`${DUOLINGO_ASSETS_BASE}/${bgChar2}`}
-        alt=""
-        className="absolute right-2 top-36 w-16 h-16 object-contain opacity-75 pointer-events-none select-none"
-        width={64}
-        height={64}
-      />
-
+    <div className="w-full min-h-screen bg-duo-snow flex flex-col font-duo">
       {/* Top bar Duolingo 2026: X, barra progreso, corazones */}
-      <header className="flex items-center justify-between px-4 pt-4 pb-2 relative z-10">
+      <header className="flex items-center justify-between px-4 pt-4 pb-2">
         <button type="button" className="w-10 h-10 flex items-center justify-center text-gray-400" aria-label="Cerrar">
           <span className="text-2xl font-bold">×</span>
         </button>
@@ -385,19 +373,33 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
       </p>
 
       {/* Instrucción */}
-      <p className="text-gray-500 font-duo text-sm text-center px-4 pb-4 relative z-10">
+      <p className="text-gray-500 font-duo text-sm text-center px-4 pb-2">
         {isImageQuestion ? 'Elige la imagen correcta' : 'Elige la respuesta correcta'}
       </p>
 
-      {/* Pregunta */}
-      <div className="px-6 pb-6 flex flex-col items-center relative z-10">
-        <p className="text-duo-eel font-duo font-bold text-xl md:text-2xl text-center leading-tight">
+      {/* Pregunta con personajes al frente: uno a la izquierda, texto al centro, otro a la derecha */}
+      <div className="px-4 sm:px-6 pb-6 flex items-center justify-center gap-3 sm:gap-4">
+        <img
+          src={`${DUOLINGO_ASSETS_BASE}/${char1}`}
+          alt=""
+          className="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 object-contain"
+          width={64}
+          height={64}
+        />
+        <p className="flex-1 min-w-0 text-duo-eel font-duo font-bold text-lg sm:text-xl md:text-2xl text-center leading-tight">
           {currentQuestion.question}
         </p>
+        <img
+          src={`${DUOLINGO_ASSETS_BASE}/${char2}`}
+          alt=""
+          className="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 object-contain"
+          width={64}
+          height={64}
+        />
       </div>
 
       {/* Opciones: tiles como en Duolingo; si es imagen, cuadrícula 2x2 */}
-      <div className={`flex-1 px-6 pb-4 max-w-lg mx-auto w-full relative z-10 ${isImageQuestion ? 'grid grid-cols-2 gap-3' : 'space-y-3'}`}>
+      <div className={`flex-1 px-4 sm:px-6 pb-4 max-w-lg mx-auto w-full ${isImageQuestion ? 'grid grid-cols-2 gap-3' : 'space-y-3'}`}>
         {(isImageQuestion ? (currentQuestion.imageOptions ?? []).slice(0, 4) : currentQuestion.options.map((text) => ({ image: text, label: text }))).map((item, i) => {
           const optionIndex = i;
           const optionText = item.label ?? item.image;
