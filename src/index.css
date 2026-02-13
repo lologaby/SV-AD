@@ -55,6 +55,16 @@ body {
   padding-top: calc(env(safe-area-inset-top, 0px) + 12px);
 }
 
+/* Dynamic Island: más margen arriba para que no tape la barra de progreso */
+.safe-area-top-island {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 20px);
+}
+
+/* Barra inferior de Safari: más margen abajo para que no tape el botón Continuar */
+.safe-area-bottom-chrome {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 44px);
+}
+
 /* Animaciones personalizadas */
 @keyframes fadeIn {
   from {

@@ -342,7 +342,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
 
   // Estilo Duolingo: barra verde arriba, tiles, feedback abajo
   return (
-    <div className="w-full min-h-screen bg-duo-snow flex flex-col font-duo safe-area-all">
+    <div className="w-full min-h-screen bg-duo-snow flex flex-col font-duo safe-area-top-island safe-area-bottom-chrome safe-area-x">
       {/* Top bar Duolingo 2026: X, barra progreso, corazones */}
       <header className="flex items-center justify-between px-4 pt-4 pb-2">
         <button type="button" className="w-10 h-10 flex items-center justify-center text-gray-400" aria-label="Cerrar">
