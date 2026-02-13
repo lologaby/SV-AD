@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { playCorrect, playWrong, playSoundFromFile } from '../utils/duoSounds';
-import DuoOwl from './DuoOwl';
 
 // Sonido correcto: public/sounds/correct.mp3 (Duolingo). Incorrecto: wrong.mp3 o tono generado.
 const USE_SOUND_FILES = true;
@@ -9,6 +8,10 @@ export interface QuizQuestion {
   question: string;
   options: string[];
   correctIndex: number;
+  /** Si es "image", se muestra una cuadrícula 2x2 de opciones visuales (emoji o URL). */
+  questionType?: 'text' | 'image';
+  /** Para questionType === 'image': 4 items con image (emoji o URL) y opcional label. */
+  imageOptions?: { image: string; label?: string }[];
 }
 
 /** GIF de Shrek aprobando (Giphy = URLs estables). Alternativa: pon tu GIF en public/shrek-approval.gif */
@@ -235,9 +238,9 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   if (finished && passed && showShrek) {
     return (
       <div className="w-full min-h-screen bg-duo-snow flex flex-col items-center px-6 pt-8 pb-10">
-        {/* Duo celebrando - tema Duolingo */}
+        {/* Duo oficial (design.duolingo.com) celebrando */}
         <div className="mb-4 animate-fade-in">
-          <DuoOwl size={100} mood="celebrate" />
+          <img src={`${DUOLINGO_ASSETS_BASE}/${DUO_SVG_IDS[0]}`} alt="" className="h-24 w-auto object-contain" width={100} height={100} />
         </div>
         <p className="text-duo-green-dark font-duo font-bold text-2xl mb-1">¡Lección completada!</p>
         <p className="text-duo-eel font-duo text-lg mb-6">Nuestro amor es un Duolingo 💚</p>
@@ -307,7 +310,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   if (finished && !passed) {
     return (
       <div className="w-full min-h-screen bg-duo-red-bg flex flex-col items-center justify-center px-6 py-10">
-        <DuoOwl size={120} mood="sad" className="mb-6" />
+        <img src={`${DUOLINGO_ASSETS_BASE}/${DUO_SVG_IDS[1]}`} alt="" className="h-28 w-auto object-contain mb-6" width={120} height={120} />
         <h1 className="text-duo-red-dark font-duo font-bold text-2xl mb-2 text-center">
           Sigue practicando
         </h1>
@@ -327,11 +330,33 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
     );
   }
 
+  const isImageQuestion = currentQuestion.questionType === 'image' && currentQuestion.imageOptions && currentQuestion.imageOptions.length >= 4;
+
+  // Personajes de fondo/lateral (1-2 por pregunta) como en las capturas Duolingo
+  const bgChar1 = QUESTION_CHARACTER_IDS[currentIndex % QUESTION_CHARACTER_IDS.length];
+  const bgChar2 = QUESTION_CHARACTER_IDS[(currentIndex + 7) % QUESTION_CHARACTER_IDS.length];
+
   // Estilo Duolingo como en las capturas: barra verde arriba, tiles, feedback abajo
   return (
-    <div className="w-full min-h-screen bg-duo-snow flex flex-col font-duo safe-area-pb">
+    <div className="w-full min-h-screen bg-duo-snow flex flex-col font-duo safe-area-pb relative overflow-hidden">
+      {/* Personajes en fondo/lateral (1-2 por pregunta) */}
+      <img
+        src={`${DUOLINGO_ASSETS_BASE}/${bgChar1}`}
+        alt=""
+        className="absolute left-2 bottom-24 w-20 h-20 object-contain opacity-80 pointer-events-none select-none"
+        width={80}
+        height={80}
+      />
+      <img
+        src={`${DUOLINGO_ASSETS_BASE}/${bgChar2}`}
+        alt=""
+        className="absolute right-2 top-36 w-16 h-16 object-contain opacity-75 pointer-events-none select-none"
+        width={64}
+        height={64}
+      />
+
       {/* Top bar Duolingo 2026: X, barra progreso, corazones */}
-      <header className="flex items-center justify-between px-4 pt-4 pb-2">
+      <header className="flex items-center justify-between px-4 pt-4 pb-2 relative z-10">
         <button type="button" className="w-10 h-10 flex items-center justify-center text-gray-400" aria-label="Cerrar">
           <span className="text-2xl font-bold">×</span>
         </button>
@@ -360,55 +385,74 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
       </p>
 
       {/* Instrucción */}
-      <p className="text-gray-500 font-duo text-sm text-center px-4 pb-4">
-        Elige la respuesta correcta
+      <p className="text-gray-500 font-duo text-sm text-center px-4 pb-4 relative z-10">
+        {isImageQuestion ? 'Elige la imagen correcta' : 'Elige la respuesta correcta'}
       </p>
 
-      {/* Pregunta (Duo + Cast of characters desde design.duolingo.com/marketing/assets) */}
-      <div className="px-6 pb-6 flex flex-col items-center">
-        <img
-          src={`${DUOLINGO_ASSETS_BASE}/${QUESTION_CHARACTER_IDS[currentIndex % QUESTION_CHARACTER_IDS.length]}`}
-          alt=""
-          className="h-14 w-auto mb-3 object-contain"
-          width={56}
-          height={56}
-        />
+      {/* Pregunta */}
+      <div className="px-6 pb-6 flex flex-col items-center relative z-10">
         <p className="text-duo-eel font-duo font-bold text-xl md:text-2xl text-center leading-tight">
           {currentQuestion.question}
         </p>
       </div>
 
-      {/* Opciones: tiles como en Duolingo (verde claro/oscuro, rojo claro/oscuro, gris) */}
-      <div className="flex-1 px-6 pb-4 space-y-3 max-w-lg mx-auto w-full">
-        {currentQuestion.options.map((option, i) => {
-          const selected = selectedIndex === i;
-          const correct = i === currentQuestion.correctIndex;
+      {/* Opciones: tiles como en Duolingo; si es imagen, cuadrícula 2x2 */}
+      <div className={`flex-1 px-6 pb-4 max-w-lg mx-auto w-full relative z-10 ${isImageQuestion ? 'grid grid-cols-2 gap-3' : 'space-y-3'}`}>
+        {(isImageQuestion ? (currentQuestion.imageOptions ?? []).slice(0, 4) : currentQuestion.options.map((text) => ({ image: text, label: text }))).map((item, i) => {
+          const optionIndex = i;
+          const optionText = item.label ?? item.image;
+          const optionImage = isImageQuestion ? item.image : undefined;
+          const selected = selectedIndex === optionIndex;
+          const correct = optionIndex === currentQuestion.correctIndex;
           const showResult = selectedIndex !== null;
           const isCorrectChoice = selected && correct;
           const isWrongChoice = selected && !correct;
 
           return (
             <button
-              key={i}
-              onClick={() => handleSelect(i)}
+              key={optionIndex}
+              onClick={() => handleSelect(optionIndex)}
               disabled={selectedIndex !== null}
-              className={`w-full py-4 px-5 rounded-2xl font-duo font-bold text-lg text-left transition-all duration-200 active:scale-[0.98] ${
-                showResult
-                  ? isCorrectChoice
-                    ? 'bg-duo-green-bg text-duo-green-dark'
-                    : isWrongChoice
-                    ? 'bg-duo-red-bg text-duo-red-dark'
-                    : correct
-                    ? 'bg-duo-green-bg text-duo-green-dark'
-                    : 'bg-gray-100 text-gray-500'
-                  : 'bg-white border-2 border-gray-300 text-duo-eel hover:border-duo-blue hover:bg-gray-50'
+              className={`rounded-2xl font-duo font-bold text-lg transition-all duration-200 active:scale-[0.98] ${
+                isImageQuestion
+                  ? `flex flex-col items-center justify-center py-6 px-4 min-h-[120px] ${
+                      showResult
+                        ? isCorrectChoice
+                          ? 'bg-duo-green-bg text-duo-green-dark'
+                          : isWrongChoice
+                          ? 'bg-duo-red-bg text-duo-red-dark'
+                          : correct
+                          ? 'bg-duo-green-bg text-duo-green-dark'
+                          : 'bg-gray-100 text-gray-500'
+                        : 'bg-white border-2 border-gray-300 text-duo-eel hover:border-duo-blue hover:bg-gray-50'
+                    }`
+                  : `w-full py-4 px-5 text-left ${
+                      showResult
+                        ? isCorrectChoice
+                          ? 'bg-duo-green-bg text-duo-green-dark'
+                          : isWrongChoice
+                          ? 'bg-duo-red-bg text-duo-red-dark'
+                          : correct
+                          ? 'bg-duo-green-bg text-duo-green-dark'
+                          : 'bg-gray-100 text-gray-500'
+                        : 'bg-white border-2 border-gray-300 text-duo-eel hover:border-duo-blue hover:bg-gray-50'
+                    }`
               }`}
             >
-              <span className="flex items-center justify-between">
-                {option}
-                {showResult && correct && <span className="text-duo-green-dark text-2xl">✓</span>}
-                {showResult && isWrongChoice && <span className="text-duo-red-dark text-2xl">✗</span>}
-              </span>
+              {isImageQuestion && optionImage ? (
+                <>
+                  <span className="text-4xl md:text-5xl mb-1" aria-hidden>{optionImage}</span>
+                  {optionText && <span className="text-sm font-normal">{optionText}</span>}
+                  {showResult && correct && <span className="text-duo-green-dark text-2xl mt-1">✓</span>}
+                  {showResult && isWrongChoice && <span className="text-duo-red-dark text-2xl mt-1">✗</span>}
+                </>
+              ) : (
+                <span className="flex items-center justify-between w-full">
+                  {optionText}
+                  {showResult && correct && <span className="text-duo-green-dark text-2xl">✓</span>}
+                  {showResult && isWrongChoice && <span className="text-duo-red-dark text-2xl">✗</span>}
+                </span>
+              )}
             </button>
           );
         })}
@@ -417,19 +461,19 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
       {/* Panel de feedback inferior (como en las fotos Duolingo) */}
       {showFeedback && (
         <div
-          className={`mt-auto rounded-t-3xl px-6 pt-8 pb-10 ${
+          className={`relative z-10 mt-auto rounded-t-3xl px-6 pt-8 pb-10 ${
             lastAnswerCorrect ? 'bg-duo-green-bg' : 'bg-duo-red-bg'
           }`}
         >
           <div className={`flex flex-col items-center gap-2 mb-6 ${lastAnswerCorrect ? 'text-duo-green-dark' : 'text-duo-red-dark'}`}>
             {lastAnswerCorrect ? (
               <>
-                <DuoOwl size={64} mood="celebrate" />
+                <img src={`${DUOLINGO_ASSETS_BASE}/${DUO_SVG_IDS[0]}`} alt="" className="h-16 w-auto object-contain" width={64} height={64} />
                 <span className="font-duo font-bold text-2xl">¡Perfecto!</span>
               </>
             ) : (
               <>
-                <DuoOwl size={56} mood="sad" />
+                <img src={`${DUOLINGO_ASSETS_BASE}/${DUO_SVG_IDS[1]}`} alt="" className="h-14 w-auto object-contain" width={56} height={56} />
                 <span className="font-duo font-bold text-xl">Sigue practicando</span>
               </>
             )}

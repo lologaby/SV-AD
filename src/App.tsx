@@ -9,14 +9,26 @@ type Stage = 'quiz' | 'stories' | 'profile_switch'
 // Preguntas para la prueba "¿Eres digno/a?" — personaliza con datos reales de la pareja
 const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
+    question: '¿Cuál representa nuestro amor?',
+    questionType: 'image',
+    options: ['💕', '🎁', '💔', '🍕'],
+    correctIndex: 0,
+    imageOptions: [
+      { image: '💕', label: 'Corazones' },
+      { image: '🎁', label: 'Regalo' },
+      { image: '💔', label: 'Corazón roto' },
+      { image: '🍕', label: 'Pizza' },
+    ],
+  },
+  {
     question: '¿Cuál es nuestra canción?',
     options: ['La que ponemos siempre', 'Otra que no es esa', 'No tenemos', 'La del primer beso'],
-    correctIndex: 0, // Cambia al índice correcto (0-3)
+    correctIndex: 0,
   },
   {
     question: '¿En qué mes nos conocimos?',
     options: ['Enero', 'Junio', 'Septiembre', 'Diciembre'],
-    correctIndex: 1, // Cambia por el mes real
+    correctIndex: 1,
   },
   {
     question: '¿Qué me gusta que me regalen?',
