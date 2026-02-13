@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import { playCorrect, playWrong } from '../utils/duoSounds';
+
+// Opcional: pon correct.mp3 y wrong.mp3 en public/sounds/ para sonidos tipo Duolingo
+const USE_SOUND_FILES = false;
 
 export interface QuizQuestion {
   question: string;
@@ -48,7 +52,24 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
 
     const isCorrect = optionIndex === currentQuestion.correctIndex;
     const newCorrectCount = correctCount + (isCorrect ? 1 : 0);
-    if (isCorrect) setCorrectCount((c) => c + 1);
+    if (isCorrect) {
+      setCorrectCount((c) => c + 1);
+      if (USE_SOUND_FILES) {
+        const a = new Audio(`${import.meta.env.BASE_URL || '/'}sounds/correct.mp3`);
+        a.volume = 0.6;
+        a.play().catch(() => playCorrect());
+      } else {
+        playCorrect();
+      }
+    } else {
+      if (USE_SOUND_FILES) {
+        const a = new Audio(`${import.meta.env.BASE_URL || '/'}sounds/wrong.mp3`);
+        a.volume = 0.6;
+        a.play().catch(() => playWrong());
+      } else {
+        playWrong();
+      }
+    }
 
     // Avanzar después de un momento
     setTimeout(() => {
@@ -180,7 +201,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
             </p>
             <button
               onClick={handleRetry}
-              className="bg-white text-valentine-red font-body font-semibold px-8 py-4 rounded-full shadow-xl hover:scale-105 active:scale-95 transition-transform"
+              className="bg-duo-green hover:bg-duo-green-light text-white font-duo font-bold px-8 py-4 rounded-full shadow-lg hover:scale-105 active:scale-95 transition-transform"
             >
               Reintentar
             </button>
@@ -190,15 +211,34 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
     );
   }
 
+  // Estilo Duolingo: fondo blanco, barra de progreso, tiles redondeados, colores Duo
   return (
-    <div className="w-full h-full min-h-screen bg-gradient-to-br from-valentine-pink via-valentine-red to-valentine-dark-red flex flex-col items-center justify-center px-6">
-      <div className="mb-6 text-white/80 font-body text-sm">
-        Pregunta {currentIndex + 1} de {questions.length}
+    <div className="w-full min-h-screen bg-duo-snow flex flex-col font-duo">
+      {/* Barra de progreso estilo Duolingo (puntos por pregunta) */}
+      <div className="flex justify-center gap-2 pt-6 pb-4 px-4">
+        {questions.map((_, i) => (
+          <div
+            key={i}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              i < currentIndex
+                ? 'bg-duo-green w-8'
+                : i === currentIndex
+                ? 'bg-duo-blue w-10'
+                : 'bg-gray-200 w-2'
+            }`}
+          />
+        ))}
       </div>
-      <h2 className="text-2xl md:text-3xl font-display font-bold text-white text-center mb-8 drop-shadow-lg">
-        {currentQuestion.question}
-      </h2>
-      <div className="w-full max-w-md space-y-4">
+
+      {/* Pregunta (tipografía bold, texto oscuro) */}
+      <div className="px-6 pt-4 pb-8">
+        <p className="text-duo-eel font-duo font-bold text-xl md:text-2xl text-center leading-tight">
+          {currentQuestion.question}
+        </p>
+      </div>
+
+      {/* Opciones: tiles blancos con borde, al tocar → verde o rojo */}
+      <div className="flex-1 px-6 pb-8 space-y-3 max-w-lg mx-auto w-full">
         {currentQuestion.options.map((option, i) => {
           const selected = selectedIndex === i;
           const correct = i === currentQuestion.correctIndex;
@@ -211,25 +251,31 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
               key={i}
               onClick={() => handleSelect(i)}
               disabled={selectedIndex !== null}
-              className={`w-full py-4 px-6 rounded-2xl font-body text-lg text-left transition-all duration-300 ${
+              className={`w-full py-4 px-5 rounded-2xl font-duo font-bold text-lg text-left transition-all duration-200 border-2 active:scale-[0.98] ${
                 showResult
                   ? isCorrectChoice
-                    ? 'bg-green-500/90 text-white'
+                    ? 'bg-duo-green border-duo-green text-white shadow-md'
                     : isWrongChoice
-                    ? 'bg-red-500/80 text-white'
+                    ? 'bg-duo-red border-duo-red text-white shadow-md'
                     : correct
-                    ? 'bg-green-500/70 text-white'
-                    : 'bg-white/20 text-white'
-              : 'bg-white/30 hover:bg-white/50 text-white active:scale-[0.98]'}`}
+                    ? 'bg-duo-green border-duo-green text-white'
+                    : 'bg-gray-50 border-gray-200 text-duo-eel'
+                  : 'bg-white border-gray-300 text-duo-eel hover:border-duo-blue hover:bg-gray-50'
+              }`}
             >
-              {option}
-              {showResult && correct && ' ✓'}
+              <span className="flex items-center justify-between">
+                {option}
+                {showResult && correct && <span className="text-2xl">✓</span>}
+                {showResult && isWrongChoice && <span className="text-2xl">✗</span>}
+              </span>
             </button>
           );
         })}
       </div>
-      <p className="mt-8 text-white/70 text-sm font-body">
-        Responde bien para demostrar que eres digno/a de ver lo que sigue 💕
+
+      {/* Pie tipo Duolingo: "Elige la respuesta correcta" */}
+      <p className="text-center text-gray-400 font-duo text-sm pb-6">
+        Elige la respuesta correcta
       </p>
     </div>
   );
