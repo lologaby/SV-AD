@@ -146,4 +146,4 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   );
 };
 
-export default WorthyQuiz;
+export default React.memo(WorthyQuiz);

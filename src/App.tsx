@@ -49,13 +49,14 @@ function App() {
         <ProfileSwitchAnimation
           currentProfileImage="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80"
           currentProfileName="Mi Amor"
-          dateInvite={{
-            title: '¿Me acompañas?',
-            message: 'Te invito a una cita especial',
-            place: 'Restaurante favorito 💕',
-            date: '14 de febrero',
-            time: '20:00',
-            extraNote: 'Vístete bonito/a, te mereces una noche inolvidable.',
+          cinemaInvite={{
+            movieTitle: 'Película Sorpresa 🎬',
+            cinema: 'Caribbean Cinemas Plaza Escorial',
+            date: '14 de febrero, 2026',
+            time: '20:30',
+            seats: 'Por confirmar en taquilla',
+            qrCodeData: 'https://caribbeancinemas.com/tickets/12345',
+            message: '¿Vamos al cine?',
           }}
         />
       )}

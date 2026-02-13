@@ -126,4 +126,4 @@ const CountdownSlide: React.FC<CountdownSlideProps> = ({
   );
 };
 
-export default CountdownSlide;
+export default React.memo(CountdownSlide);

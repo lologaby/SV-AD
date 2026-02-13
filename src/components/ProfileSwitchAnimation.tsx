@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import DateInviteSlide from './CustomSlides/DateInviteSlide';
+import CinemaInviteSlide from './CustomSlides/CinemaInviteSlide';
 
 interface ProfileSwitchAnimationProps {
   /** Avatar/url del perfil actual (el que acaba de terminar) */
@@ -8,14 +8,15 @@ interface ProfileSwitchAnimationProps {
   currentProfileName?: string;
   /** Al terminar la animación (después de mostrar la invitación) */
   onComplete?: () => void;
-  /** Props para personalizar la invitación a la cita */
-  dateInvite?: {
-    title?: string;
-    message?: string;
-    place?: string;
+  /** Props para personalizar la invitación al cine */
+  cinemaInvite?: {
+    movieTitle?: string;
+    cinema?: string;
     date?: string;
     time?: string;
-    extraNote?: string;
+    seats?: string;
+    qrCodeData?: string;
+    message?: string;
   };
 }
 
@@ -29,7 +30,7 @@ const ProfileSwitchAnimation: React.FC<ProfileSwitchAnimationProps> = ({
   currentProfileImage = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80',
   currentProfileName = 'Mi Amor',
   onComplete,
-  dateInvite = {},
+  cinemaInvite = {},
 }) => {
   const [phase, setPhase] = useState<'list' | 'opening' | 'story'>('list');
 
@@ -66,6 +67,7 @@ const ProfileSwitchAnimation: React.FC<ProfileSwitchAnimationProps> = ({
                 src={currentProfileImage}
                 alt={currentProfileName}
                 className="w-full h-full rounded-full object-cover opacity-70"
+                loading="lazy"
               />
             </div>
             <span className="text-white/50 text-xs mt-2 font-body truncate max-w-[80px]">
@@ -106,10 +108,10 @@ const ProfileSwitchAnimation: React.FC<ProfileSwitchAnimationProps> = ({
     );
   }
 
-  // Fase 3: mostrar el story de la invitación a la cita (pantalla completa)
+  // Fase 3: mostrar el story de la invitación al cine (pantalla completa)
   return (
     <div className="w-full h-full relative">
-      <DateInviteSlide {...dateInvite} />
+      <CinemaInviteSlide {...cinemaInvite} />
       {onComplete && (
         <button
           onClick={onComplete}
@@ -122,4 +124,4 @@ const ProfileSwitchAnimation: React.FC<ProfileSwitchAnimationProps> = ({
   );
 };
 
-export default ProfileSwitchAnimation;
+export default React.memo(ProfileSwitchAnimation);

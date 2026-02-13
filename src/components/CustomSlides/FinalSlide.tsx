@@ -87,4 +87,4 @@ const FinalSlide: React.FC<FinalSlideProps> = ({
   );
 };
 
-export default FinalSlide;
+export default React.memo(FinalSlide);

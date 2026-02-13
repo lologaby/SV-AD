@@ -44,4 +44,4 @@ const TextSlide: React.FC<TextSlideProps> = ({
   );
 };
 
-export default TextSlide;
+export default React.memo(TextSlide);

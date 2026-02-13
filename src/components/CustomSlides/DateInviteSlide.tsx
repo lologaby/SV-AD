@@ -62,4 +62,4 @@ const DateInviteSlide: React.FC<DateInviteSlideProps> = ({
   );
 };
 
-export default DateInviteSlide;
+export default React.memo(DateInviteSlide);

@@ -76,4 +76,4 @@ const ReasonsList: React.FC<ReasonsListProps> = ({
   );
 };
 
-export default ReasonsList;
+export default React.memo(ReasonsList);

@@ -25,6 +25,8 @@ const PhotoTextSlide: React.FC<PhotoTextSlideProps> = ({
         alt="Valentine"
         className="w-full h-full object-cover"
         style={{ objectFit: 'cover' }}
+        loading="lazy"
+        decoding="async"
       />
       
       {/* Overlay oscuro para legibilidad del texto */}
@@ -58,4 +60,4 @@ const PhotoTextSlide: React.FC<PhotoTextSlideProps> = ({
   );
 };
 
-export default PhotoTextSlide;
+export default React.memo(PhotoTextSlide);
