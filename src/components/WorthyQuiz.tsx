@@ -157,7 +157,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   // ——— Fase: Bienvenida (gradiente holográfico / tornasol) ———
   if (phase === 'welcome') {
     return (
-      <div className="w-full min-h-screen min-h-screen-dynamic relative overflow-hidden bg-gradient-holographic flex flex-col items-center justify-center px-6 py-10 safe-area-top-with-chrome safe-area-bottom safe-area-x">
+      <div className="w-full quiz-fullscreen relative overflow-hidden bg-gradient-holographic px-6 py-10">
         <div className="relative z-10 flex flex-col items-center">
           <p className="text-2xl md:text-3xl font-duo font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)] mb-2">Hola Muñeca!</p>
           <p className="text-white/95 font-duo text-lg text-center mb-8 drop-shadow-[0_1px_4px_rgba(0,0,0,0.2)]">¿Esta invitación romántica es para ti?</p>
@@ -209,7 +209,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
       setPhase('quiz');
     };
     return (
-      <div className="w-full min-h-screen min-h-screen-dynamic relative overflow-hidden bg-gradient-holographic flex flex-col items-center justify-center px-6 py-10 safe-area-top-with-chrome safe-area-bottom safe-area-x">
+      <div className="w-full quiz-fullscreen relative overflow-hidden bg-gradient-holographic px-6 py-10">
         <div className="relative z-10 flex flex-col items-center w-full max-w-xs">
           <p className="text-xl font-duo font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)] mb-2">Escribe tu nombre</p>
           <form onSubmit={handleNameSubmit} className="w-full flex flex-col items-center gap-4">
@@ -241,7 +241,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   // Pantalla de éxito: estilo Duolingo + Shrek + Ver mi sorpresa (sin tocar lo de Instagram)
   if (finished && passed && showShrek) {
     return (
-      <div className="w-full min-h-screen bg-duo-snow flex flex-col items-center px-6 pt-8 pb-10 safe-area-all">
+      <div className="w-full quiz-fullscreen bg-duo-snow px-6 pt-8 pb-10">
         {/* Duo oficial (design.duolingo.com) celebrando */}
         <div className="mb-4 animate-fade-in">
           <img src={`${DUOLINGO_ASSETS_BASE}/${DUO_SVG_IDS[0]}`} alt="" className="h-24 w-auto object-contain" width={100} height={100} />
@@ -313,7 +313,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
 
   if (finished && !passed) {
     return (
-      <div className="w-full min-h-screen bg-duo-red-bg flex flex-col items-center justify-center px-6 py-10 safe-area-all">
+      <div className="w-full quiz-fullscreen bg-duo-red-bg px-6 py-10">
         <img src={`${DUOLINGO_ASSETS_BASE}/${DUO_SVG_IDS[1]}`} alt="" className="h-28 w-auto object-contain mb-6" width={120} height={120} />
         <h1 className="text-duo-red-dark font-duo font-bold text-2xl mb-2 text-center">
           Sigue practicando
@@ -342,7 +342,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
 
   // Estilo Duolingo: barra verde arriba, tiles, feedback abajo
   return (
-    <div className="w-full min-h-screen bg-duo-snow flex flex-col font-duo safe-area-top-island safe-area-bottom-chrome safe-area-x">
+    <div className="w-full quiz-screen bg-duo-snow font-duo">
       {/* Top bar Duolingo 2026: X, barra progreso, corazones */}
       <header className="flex items-center justify-between px-4 pt-4 pb-2">
         <button type="button" className="w-10 h-10 flex items-center justify-center text-gray-400" aria-label="Cerrar">
@@ -395,7 +395,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
       </div>
 
       {/* Opciones: tiles como en Duolingo; si es imagen, cuadrícula 2x2 */}
-      <div className={`flex-1 px-4 sm:px-6 pb-4 max-w-lg mx-auto w-full ${isImageQuestion ? 'grid grid-cols-2 gap-3' : 'space-y-3'}`}>
+      <div className={`flex-1 overflow-y-auto px-4 sm:px-6 pb-4 max-w-lg mx-auto w-full ${isImageQuestion ? 'grid grid-cols-2 gap-3 content-start' : 'space-y-3'}`}>
         {(isImageQuestion ? (currentQuestion.imageOptions ?? []).slice(0, 4) : currentQuestion.options.map((text) => ({ image: text, label: text }))).map((item, i) => {
           const optionIndex = i;
           const optionText = item.label ?? item.image;

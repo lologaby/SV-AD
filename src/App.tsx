@@ -41,7 +41,7 @@ function App() {
   const [stage, setStage] = useState<Stage>('quiz')
 
   return (
-    <div className="w-screen min-h-screen-dynamic h-screen-dynamic overflow-hidden bg-black">
+    <div className="w-screen h-screen-dynamic overflow-hidden bg-black">
       {stage === 'quiz' && (
         <WorthyQuiz
           questions={QUIZ_QUESTIONS}

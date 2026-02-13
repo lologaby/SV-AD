@@ -151,7 +151,7 @@ const ValentineStories: React.FC<ValentineStoriesProps> = ({
   // La librería ya tiene soporte nativo para hold-to-pause
 
   return (
-    <div className="w-screen min-h-screen-dynamic h-screen-dynamic bg-black stories-container">
+    <div className="w-screen h-screen-dynamic bg-black stories-container">
       <Stories
         stories={stories}
         defaultInterval={5000}

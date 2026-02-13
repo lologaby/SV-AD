@@ -51,18 +51,40 @@ body {
   padding-right: env(safe-area-inset-right, 0);
 }
 
-.safe-area-top-with-chrome {
-  padding-top: calc(env(safe-area-inset-top, 0px) + 12px);
+/*
+ * Layout para Safari iOS (iPhone 16):
+ * - 100dvh ya descuenta la barra de Safari. No hace falta sumar px extra.
+ * - env(safe-area-inset-top) = ~59px (Dynamic Island). Solo padding para eso.
+ * - env(safe-area-inset-bottom) = ~34px (home indicator). Solo padding para eso.
+ * - Usar height fija (no min-height) + overflow para que el contenido quepa.
+ */
+
+/* Contenedor de quiz: altura fija al viewport visible, con safe area dentro */
+.quiz-screen {
+  height: 100dvh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
 }
 
-/* Dynamic Island: más margen arriba para que no tape la barra de progreso */
-.safe-area-top-island {
-  padding-top: calc(env(safe-area-inset-top, 0px) + 20px);
-}
-
-/* Barra inferior de Safari: margen para que todo el panel (Perfecto/Sigue practicando + botón) quede visible */
-.safe-area-bottom-chrome {
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 100px);
+/* Pantallas centradas (bienvenida, nombre, éxito, fallo): misma altura fija */
+.quiz-fullscreen {
+  height: 100dvh;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
 }
 
 /* Animaciones personalizadas */
@@ -193,12 +215,11 @@ body {
   z-index: 0;
 }
 
-/* Stories: altura dinámica (barra de Safari) + safe area (notch + home indicator) */
+/* Stories: altura fija al viewport + safe area */
 .stories-container {
   width: 100vw;
-  min-height: 100dvh;
-  min-height: 100vh;
-  height: 100%;
+  height: 100dvh;
+  height: 100vh;
   box-sizing: border-box;
   padding-top: env(safe-area-inset-top, 0);
   padding-bottom: env(safe-area-inset-bottom, 0);
@@ -207,8 +228,6 @@ body {
 }
 .stories-container > div {
   height: 100% !important;
-  max-height: 100%;
-  min-height: 0;
 }
 
 /* Override de estilos para mejor UX móvil */
