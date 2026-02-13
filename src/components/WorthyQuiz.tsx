@@ -26,6 +26,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   const [correctCount, setCorrectCount] = useState(0);
   const [finished, setFinished] = useState(false);
   const [passed, setPassed] = useState(false);
+  const [showShrek, setShowShrek] = useState(false);
 
   const currentQuestion = questions[currentIndex];
   const isLastQuestion = currentIndex === questions.length - 1;
@@ -41,8 +42,18 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
     // Avanzar después de un momento
     setTimeout(() => {
       if (isLastQuestion) {
-        setFinished(true);
-        setPassed(newCorrectCount >= minCorrect);
+        const didPass = newCorrectCount >= minCorrect;
+        setPassed(didPass);
+        if (didPass) {
+          // Si pasó, mostrar GIF de Shrek primero
+          setShowShrek(true);
+          setTimeout(() => {
+            setFinished(true);
+          }, 2500); // Duración del GIF (~2.3s) + pequeño delay
+        } else {
+          // Si no pasó, mostrar resultado directamente
+          setFinished(true);
+        }
       } else {
         setCurrentIndex((i) => i + 1);
         setSelectedIndex(null);
@@ -56,7 +67,30 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
     setCorrectCount(0);
     setFinished(false);
     setPassed(false);
+    setShowShrek(false);
   };
+
+  // Mostrar GIF de Shrek cuando pasan la prueba
+  if (showShrek && passed) {
+    return (
+      <div className="w-full h-full min-h-screen bg-gradient-to-br from-valentine-dark-red via-valentine-red to-valentine-pink flex flex-col items-center justify-center px-6 text-center">
+        <div className="mb-6 animate-fade-in">
+          <img
+            src="https://media.tenor.com/5Ry7jGuGp7YAAAAC/shrek-shrek-meme.gif"
+            alt="Shrek aprobando"
+            className="w-full max-w-md rounded-2xl shadow-2xl"
+            style={{ maxHeight: '400px', objectFit: 'contain' }}
+          />
+        </div>
+        <h1 className="text-3xl md:text-4xl font-display font-bold text-white mb-2 animate-fade-in">
+          ¡Eres digno/a! 🎉
+        </h1>
+        <p className="text-xl font-body text-white/90 animate-fade-in">
+          Shrek aprueba tu conocimiento 💚
+        </p>
+      </div>
+    );
+  }
 
   if (finished) {
     return (
