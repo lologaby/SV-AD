@@ -14,6 +14,38 @@ export interface QuizQuestion {
 /** GIF de Shrek aprobando (Giphy = URLs estables). Alternativa: pon tu GIF en public/shrek-approval.gif */
 const SHREK_GIF_URL = 'https://media.giphy.com/media/TIGP3k4gNAqvza2KJK/giphy.gif';
 
+/** Assets oficiales desde Duolingo Brand Guidelines:
+ *  https://design.duolingo.com/marketing/assets#duo
+ *  https://design.duolingo.com/marketing/assets#cast-of-characters
+ */
+const DUOLINGO_ASSETS_BASE = 'https://design.duolingo.com';
+const DUO_SVG_IDS = [
+  'a57733350c2c9a01fd6e.svg',
+  'fe225c25f1c6afe81424.svg',
+  '215f9f8714df8f7de63c.svg',
+  'ad9ec13f2b161e008ab1.svg',
+  '9a6ea4292d92aebb9c5a.svg',
+  '885521149d32d1cf32c3.svg',
+  '3aeb9f981f17977278cf.svg',
+  '6289e2c94af3a5dbdcec.svg',
+  '266788168c5f135b35e3.svg',
+  '2c82efcd38d61a9bd45e.svg',
+];
+const CAST_SVG_IDS = [
+  '52ba0a30df9d8346a1d7.svg',
+  '47cea17496b4500c170e.svg',
+  '4a0a10a8a660d11fe5af.svg',
+  '6ae0baeaa1d7dd4ccf6a.svg',
+  '3759efd081011423baf6.svg',
+  '4f72eb158dd9f677e4b7.svg',
+  'bb221188924ec942b2f1.svg',
+  '1ec082de7137d333435e.svg',
+  '6bf7411898766ffa8cb8.svg',
+  '3b2af5841d5325e4acd3.svg',
+];
+/** Duo + Cast of characters: alternamos por pregunta */
+const QUESTION_CHARACTER_IDS = [...DUO_SVG_IDS, ...CAST_SVG_IDS];
+
 interface WorthyQuizProps {
   questions: QuizQuestion[];
   minCorrect?: number;
@@ -118,7 +150,6 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   };
 
   const progressPercent = ((currentIndex + (showFeedback ? 1 : 0)) / questions.length) * 100;
-  const showDuoInQuestion = currentIndex % 2 === 0; // Duo en preguntas pares
 
   // ——— Fase: Bienvenida ———
   if (phase === 'welcome') {
@@ -316,12 +347,8 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
         </div>
       </header>
 
-      {/* Tema: Nuestro amor es un Duolingo + racha */}
+      {/* Título + racha (sin "Nuestro amor es un Duolingo" hasta que pase el test) */}
       <div className="flex items-center justify-center gap-2 pt-2 pb-1">
-        <DuoOwl size={36} mood="happy" />
-        <p className="text-duo-green-dark font-duo font-bold text-base">
-          Nuestro amor es un Duolingo
-        </p>
         {correctCount > 0 && (
           <span className="flex items-center gap-0.5 text-duo-orange font-duo font-bold text-sm" title="Racha">
             🔥 {correctCount}
@@ -337,11 +364,15 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
         Elige la respuesta correcta
       </p>
 
-      {/* Pregunta (con Duo en preguntas pares) */}
+      {/* Pregunta (Duo + Cast of characters desde design.duolingo.com/marketing/assets) */}
       <div className="px-6 pb-6 flex flex-col items-center">
-        {showDuoInQuestion && (
-          <DuoOwl size={56} mood="happy" className="mb-3" />
-        )}
+        <img
+          src={`${DUOLINGO_ASSETS_BASE}/${QUESTION_CHARACTER_IDS[currentIndex % QUESTION_CHARACTER_IDS.length]}`}
+          alt=""
+          className="h-14 w-auto mb-3 object-contain"
+          width={56}
+          height={56}
+        />
         <p className="text-duo-eel font-duo font-bold text-xl md:text-2xl text-center leading-tight">
           {currentQuestion.question}
         </p>
