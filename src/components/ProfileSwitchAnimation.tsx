@@ -46,7 +46,7 @@ const ProfileSwitchAnimation: React.FC<ProfileSwitchAnimationProps> = ({
   // Fase 1: Simular swipe left - el story actual se desliza hacia la izquierda
   if (phase === 'swiping') {
     return (
-      <div className="w-full h-full bg-black relative overflow-hidden">
+      <div className="w-full h-full bg-black relative overflow-hidden safe-area-all">
         {/* Story anterior (deslizándose hacia la izquierda) */}
         <div className="absolute inset-0 animate-swipe-left">
           <div className="w-full h-full bg-gradient-to-br from-valentine-dark-red via-valentine-red to-valentine-pink flex items-center justify-center">
@@ -94,7 +94,7 @@ const ProfileSwitchAnimation: React.FC<ProfileSwitchAnimationProps> = ({
   // Fase 2: Transición breve (header completo visible)
   if (phase === 'transition') {
     return (
-      <div className="w-full h-full bg-black relative">
+      <div className="w-full h-full bg-black relative safe-area-all">
         {/* Header del nuevo perfil: Caribbean Cinemas */}
         <div className="absolute top-0 left-0 right-0 z-30 bg-black/50 backdrop-blur-sm border-b border-white/10">
           <div className="flex items-center gap-3 px-4 py-3">
@@ -131,7 +131,7 @@ const ProfileSwitchAnimation: React.FC<ProfileSwitchAnimationProps> = ({
 
   // Fase 3: Mostrar el story de invitación al cine (con header del nuevo perfil)
   return (
-    <div className="w-full h-full relative bg-black">
+    <div className="w-full h-full relative bg-black safe-area-all">
       {/* Header del perfil Caribbean Cinemas (como en Instagram Stories) */}
       <div className="absolute top-0 left-0 right-0 z-30 bg-gradient-to-b from-black/80 to-transparent pb-4">
         <div className="flex items-center gap-3 px-4 py-3">

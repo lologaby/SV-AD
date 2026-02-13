@@ -21,9 +21,9 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
     ],
   },
   {
-    question: '¿Cuál es nuestra canción?',
-    options: ['La que ponemos siempre', 'Otra que no es esa', 'No tenemos', 'La del primer beso'],
-    correctIndex: 0,
+    question: '¿A qué lugar fuimos en nuestro primer Date?',
+    options: ['Al cine', 'A Ben & Jerry\'s', 'Cold Stone', 'El Bori'],
+    correctIndex: 0, // Cambia al índice correcto (0-3)
   },
   {
     question: '¿En qué mes nos conocimos?',
@@ -41,7 +41,7 @@ function App() {
   const [stage, setStage] = useState<Stage>('quiz')
 
   return (
-    <div className="w-screen h-screen overflow-hidden bg-black">
+    <div className="w-screen min-h-[100vh] min-h-[100dvh] h-screen overflow-hidden bg-black">
       {stage === 'quiz' && (
         <WorthyQuiz
           questions={QUIZ_QUESTIONS}
