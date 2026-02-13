@@ -157,7 +157,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   // ——— Fase: Bienvenida (gradiente holográfico / tornasol) ———
   if (phase === 'welcome') {
     return (
-      <div className="w-full min-h-screen relative overflow-hidden bg-gradient-holographic flex flex-col items-center justify-center px-6 py-10 safe-area-all">
+      <div className="w-full min-h-screen min-h-screen-dynamic relative overflow-hidden bg-gradient-holographic flex flex-col items-center justify-center px-6 py-10 safe-area-top-with-chrome safe-area-bottom safe-area-x">
         <div className="relative z-10 flex flex-col items-center">
           <p className="text-2xl md:text-3xl font-duo font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)] mb-2">Hola Muñeca!</p>
           <p className="text-white/95 font-duo text-lg text-center mb-8 drop-shadow-[0_1px_4px_rgba(0,0,0,0.2)]">¿Esta invitación romántica es para ti?</p>
@@ -209,7 +209,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
       setPhase('quiz');
     };
     return (
-      <div className="w-full min-h-screen relative overflow-hidden bg-gradient-holographic flex flex-col items-center justify-center px-6 py-10 safe-area-all">
+      <div className="w-full min-h-screen min-h-screen-dynamic relative overflow-hidden bg-gradient-holographic flex flex-col items-center justify-center px-6 py-10 safe-area-top-with-chrome safe-area-bottom safe-area-x">
         <div className="relative z-10 flex flex-col items-center w-full max-w-xs">
           <p className="text-xl font-duo font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)] mb-2">Escribe tu nombre</p>
           <form onSubmit={handleNameSubmit} className="w-full flex flex-col items-center gap-4">
