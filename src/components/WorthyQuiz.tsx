@@ -60,7 +60,7 @@ interface WorthyQuizProps {
 }
 
 /**
- * Quiz de "¿Eres digno/a?" antes de poder ver las stories.
+ * Quiz de "¿Eres digna?" antes de poder ver las stories.
  * Si acierta las preguntas necesarias, llama onPass() para mostrar el contenido.
  */
 const EXPECTED_NAME = 'Dayralee';
@@ -323,7 +323,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
           </div>
         </div>
         <h1 className="text-2xl font-duo font-bold text-duo-eel mb-2 animate-fade-in">
-          ¡Eres digno/a! 🎉
+          ¡Eres digna! 🎉
         </h1>
         <p className="text-duo-eel font-duo mb-8 animate-fade-in">
           Shrek aprueba tu conocimiento 💚
@@ -438,9 +438,9 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
               key={optionIndex}
               onClick={() => handleSelect(optionIndex)}
               disabled={selectedIndex !== null}
-              className={`rounded-2xl font-duo font-bold text-lg transition-all duration-200 active:scale-[0.98] ${
+              className={`rounded-2xl font-duo font-bold text-lg transition-colors duration-200 active:scale-[0.98] ${
                 isImageQuestion
-                  ? `flex flex-col items-center justify-center py-6 px-4 min-h-[120px] ${
+                  ? `flex flex-col items-stretch justify-start py-3 px-3 min-h-[140px] w-full ${
                       showResult
                         ? isCorrectChoice
                           ? 'bg-duo-green-bg text-duo-green-dark'
@@ -466,18 +466,21 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
             >
               {isImageQuestion && optionImage ? (
                 <>
-                  {isImageUrl(optionImage) ? (
-                    <img
-                      src={optionImage}
-                      alt={optionText ?? ''}
-                      className="w-full h-20 sm:h-24 object-cover rounded-xl mb-1"
-                    />
-                  ) : (
-                    <span className="text-4xl md:text-5xl mb-1" aria-hidden>{optionImage}</span>
-                  )}
-                  {optionText && <span className="text-sm font-normal">{optionText}</span>}
-                  {showResult && correct && <span className="text-duo-green-dark text-2xl mt-1">✓</span>}
-                  {showResult && isWrongChoice && <span className="text-duo-red-dark text-2xl mt-1">✗</span>}
+                  {/* Contenedor fijo para la imagen: no se encoge al mostrar resultado */}
+                  <div className="w-full h-24 sm:h-28 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
+                    {isImageUrl(optionImage) ? (
+                      <img
+                        src={optionImage}
+                        alt={optionText ?? ''}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="w-full h-full flex items-center justify-center text-4xl md:text-5xl" aria-hidden>{optionImage}</span>
+                    )}
+                  </div>
+                  <span className="text-sm font-normal mt-1.5 line-clamp-1">{optionText}</span>
+                  {showResult && correct && <span className="text-duo-green-dark text-xl mt-0.5 flex-shrink-0">✓</span>}
+                  {showResult && isWrongChoice && <span className="text-duo-red-dark text-xl mt-0.5 flex-shrink-0">✗</span>}
                 </>
               ) : (
                 <span className="flex items-center justify-between w-full">

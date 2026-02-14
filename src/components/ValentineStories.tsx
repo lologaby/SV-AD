@@ -53,13 +53,13 @@ const ValentineStories: React.FC<ValentineStoriesProps> = ({
   // Rutas de imágenes (public/images) — compatible con GitHub Pages
   const image = (name: string) => `${base}images/${name}.png`;
 
-  // Stories: fotos por año en orden 2018 → 2019 → 2022 → 2024 → 2025, cada una con sticker del año
+  // Header tipo Instagram: círculo de usuario + nombre + cuenta (1/5, 2/5, ...)
   const stories = [
-    { content: () => <PhotoYearSlide imageUrl={image('2018')} year="2018" />, duration: 5000 },
-    { content: () => <PhotoYearSlide imageUrl={image('2019')} year="2019" />, duration: 5000 },
-    { content: () => <PhotoYearSlide imageUrl={image('2022')} year="2022" />, duration: 5000 },
-    { content: () => <PhotoYearSlide imageUrl={image('2024')} year="2024" />, duration: 5000 },
-    { content: () => <PhotoYearSlide imageUrl={image('2025')} year="2025" />, duration: 5000 },
+    { content: () => <PhotoYearSlide imageUrl={image('2018')} year="2018" />, duration: 8000, header: { heading: 'Lupita & Juan', subheading: '1/5', profileImage: image('2025') } },
+    { content: () => <PhotoYearSlide imageUrl={image('2019')} year="2019" />, duration: 8000, header: { heading: 'Lupita & Juan', subheading: '2/5', profileImage: image('2025') } },
+    { content: () => <PhotoYearSlide imageUrl={image('2022')} year="2022" />, duration: 8000, header: { heading: 'Lupita & Juan', subheading: '3/5', profileImage: image('2025') } },
+    { content: () => <PhotoYearSlide imageUrl={image('2024')} year="2024" />, duration: 8000, header: { heading: 'Lupita & Juan', subheading: '4/5', profileImage: image('2025') } },
+    { content: () => <PhotoYearSlide imageUrl={image('2025')} year="2025" />, duration: 8000, header: { heading: 'Lupita & Juan', subheading: '5/5', profileImage: image('2025') } },
   ];
 
   // Manejar eventos de las stories
@@ -84,7 +84,7 @@ const ValentineStories: React.FC<ValentineStoriesProps> = ({
     <div className="stories-container bg-black">
       <Stories
         stories={stories}
-        defaultInterval={5000}
+        defaultInterval={8000}
         width="100%"
         height="100%"
         loop={loop}

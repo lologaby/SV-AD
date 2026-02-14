@@ -17,7 +17,7 @@ function getInitialStage(): Stage {
 const base = import.meta.env.BASE_URL;
 const image = (path: string) => `${base}${path}`;
 
-// Preguntas para la prueba "¿Eres digno/a?" — personaliza con datos reales de la pareja
+// Preguntas para la prueba "¿Eres digna?" — personaliza con datos reales de la pareja
 const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
     question: 'Si tuviera que dejar alguno de estos alimentos, ¿cuál crees que se me haría imposible dejar?',
