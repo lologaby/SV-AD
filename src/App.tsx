@@ -28,7 +28,7 @@ const image = (path: string) => `${base}${path}`;
 // Preguntas para la prueba "¿Eres digna?" — personaliza con datos reales de la pareja
 const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
-    question: 'Si tuviera que dejar alguno de estos alimentos, ¿cuál crees que se me haría imposible dejar?',
+    question: 'Si tuviera que dejar alguno de estos alimentos, ¿cuál crees que se me haría difícil dejar?',
     questionType: 'image',
     options: ['Churrasco', 'Dolceroni', 'Oeufs', 'Smash'],
     correctIndex: 1,
