@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 /** 14 Feb 2026 12:00 AM Eastern = 05:00 UTC */
 const TARGET_UTC = '2026-02-14T05:00:00.000Z';
@@ -56,6 +56,9 @@ interface CountdownScreenProps {
 const CountdownScreen: React.FC<CountdownScreenProps> = ({ onReached }) => {
   const target = getTargetDate();
   const [remaining, setRemaining] = useState(() => getRemaining(new Date(), target));
+  const [musicPlaying, setMusicPlaying] = useState(false);
+  const [showMusicButton, setShowMusicButton] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Música de fondo: dtmf.mp3 desde 1:20
   useEffect(() => {
@@ -64,12 +67,35 @@ const CountdownScreen: React.FC<CountdownScreenProps> = ({ onReached }) => {
     const audio = new Audio(musicUrl);
     audio.currentTime = COUNTDOWN_MUSIC_START_SEC;
     audio.loop = true;
+    audioRef.current = audio;
+
+    // Intentar autoplay
     const p = audio.play();
-    if (p !== undefined) p.catch(() => {});
+    if (p !== undefined) {
+      p.then(() => {
+        setMusicPlaying(true);
+      }).catch(() => {
+        // Autoplay bloqueado - mostrar botón
+        setShowMusicButton(true);
+      });
+    }
+
     return () => {
       audio.pause();
+      audioRef.current = null;
     };
   }, []);
+
+  // Función para activar música manualmente
+  const handlePlayMusic = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = COUNTDOWN_MUSIC_START_SEC;
+      audioRef.current.play().then(() => {
+        setMusicPlaying(true);
+        setShowMusicButton(false);
+      }).catch(() => {});
+    }
+  };
 
   useEffect(() => {
     const t = setInterval(() => {
@@ -157,6 +183,25 @@ const CountdownScreen: React.FC<CountdownScreenProps> = ({ onReached }) => {
             </span>
           </div>
         </div>
+
+        {/* Botón de música (solo si autoplay falló) */}
+        {showMusicButton && !musicPlaying && (
+          <button
+            onClick={handlePlayMusic}
+            className="mt-4 mb-2 flex items-center gap-2 px-5 py-3 rounded-2xl bg-duo-green text-white font-duo font-bold shadow-lg hover:bg-duo-green-light hover:scale-[1.02] transition-transform active:scale-[0.98]"
+          >
+            <span className="text-xl">🎵</span>
+            <span>Activar música</span>
+          </button>
+        )}
+
+        {/* Indicador de música sonando */}
+        {musicPlaying && (
+          <div className="mt-4 mb-2 flex items-center gap-2 text-duo-green font-duo text-sm">
+            <span className="animate-pulse">🎵</span>
+            <span>Música sonando</span>
+          </div>
+        )}
 
         {/* Mensaje adicional */}
         <p className="text-duo-eel/50 font-duo text-sm text-center mt-4">
