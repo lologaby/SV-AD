@@ -30,11 +30,11 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
     question: 'Si tuviera que dejar alguno de estos alimentos, ¿cuál crees que se me haría imposible dejar?',
     questionType: 'image',
-    options: ['Churrasco', 'Doleroni', 'Oeufs', 'Smash'],
+    options: ['Churrasco', 'Dolceroni', 'Oeufs', 'Smash'],
     correctIndex: 1,
     imageOptions: [
       { image: image('images/churrasco.jpg'), label: 'Churrasco' },
-      { image: image('images/diavola.avif'), label: 'Doleroni' },
+      { image: image('images/diavola.avif'), label: 'Dolceroni' },
       { image: image('images/oeufs.webp'), label: 'Oeufs' },
       { image: image('images/smash.avif'), label: 'Smash' },
     ],
