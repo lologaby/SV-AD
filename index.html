@@ -43,6 +43,19 @@
       }
     </style>
     <script>
+      // SPA redirect: procesar rutas que vienen del 404.html
+      (function(l) {
+        if (l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) { 
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+            l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location))
+    </script>
+    <script>
       // Fix para Safari iOS: calcular viewport height real
       // Esto ayuda cuando svh/dvh no están disponibles
       function setVH() {
