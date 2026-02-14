@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createMusicPlayer, type MusicController } from '../utils/duoSounds';
 
-/** 14 Feb 2026 12:00 AM Eastern = 05:00 UTC */
-const TARGET_UTC = '2026-02-14T05:00:00.000Z';
+/** 14 Feb 2026 12:00 AM Atlantic (Puerto Rico, UTC-4) = 04:00 UTC */
+const TARGET_UTC = '2026-02-14T04:00:00.000Z';
 const STORAGE_KEY_SKIP = 'sv-ad-countdown-skip';
 
 /** Reproducir dtmf.mp3 desde 1:20 (80 s) en el countdown */
@@ -118,7 +118,7 @@ const CountdownScreen: React.FC<CountdownScreenProps> = ({ onReached }) => {
           Duolingo de Amor
         </h1>
         <p className="text-duo-eel/70 font-duo text-base text-center mb-8">
-          La tarjeta virtual se abre el <span className="font-bold text-duo-eel">14 de febrero</span> a las 12:00 AM
+          La tarjeta virtual se abre el <span className="font-bold text-duo-eel">14 de febrero</span> a la medianoche
         </p>
 
         {/* Countdown cards estilo Duolingo */}
