@@ -1,9 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import Stories from 'react-insta-stories';
-import TextSlide from './CustomSlides/TextSlide';
-import ReasonsList from './CustomSlides/ReasonsList';
-import CountdownSlide from './CustomSlides/CountdownSlide';
-import FinalSlide from './CustomSlides/FinalSlide';
+import PhotoYearSlide from './CustomSlides/PhotoYearSlide';
 
 interface ValentineStoriesProps {
   /** Si false, al terminar todas las stories se llama onAllStoriesEnd en vez de hacer loop */
@@ -29,107 +26,17 @@ const ValentineStories: React.FC<ValentineStoriesProps> = ({
     }
   }, []);
 
-  // Configuración de las stories (header requiere heading, subheading y profileImage como string)
+  // Rutas de imágenes (public/images) — compatible con GitHub Pages
+  const base = import.meta.env.BASE_URL;
+  const image = (name: string) => `${base}images/${name}.png`;
+
+  // Stories: fotos por año en orden 2018 → 2019 → 2022 → 2024 → 2025, cada una con sticker del año
   const stories = [
-    // Slide 1: Bienvenida con imagen
-    {
-      url: 'https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?w=800&q=80',
-      duration: 5000,
-      header: {
-        heading: 'Mi Amor ❤️',
-        subheading: 'San Valentín 2026',
-        profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80'
-      }
-    },
-    
-    // Slide 2: Mensaje de texto con gradiente
-    {
-      content: () => (
-        <TextSlide 
-          message="Te amo más cada día"
-          subtitle="Eres mi persona favorita"
-          gradient="from-valentine-pink via-valentine-red to-valentine-dark-red"
-        />
-      ),
-      duration: 5000
-    },
-    
-    // Slide 3: Razones por las que te amo
-    {
-      content: () => (
-        <ReasonsList 
-          reasons={[
-            'Tu sonrisa ilumina mi día',
-            'Tu forma de ser única y especial',
-            'Cómo me haces reír sin esfuerzo',
-            'Tu apoyo incondicional',
-            'Los momentos que compartimos',
-            'Tu corazón generoso',
-            'Cómo me haces sentir amado/a',
-            'Eres mi mejor decisión'
-          ]}
-          title="Razones por las que te amo"
-        />
-      ),
-      duration: 8000
-    },
-    
-    // Slide 4: Imagen con texto overlay
-    {
-      url: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800&q=80',
-      duration: 5000,
-      header: {
-        heading: 'Nuestro momento especial',
-        subheading: '',
-        profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80'
-      }
-    },
-    
-    // Slide 5: Countdown - Juntos desde...
-    {
-      content: () => (
-        <CountdownSlide 
-          startDate={new Date('2023-06-15')} // Cambia esta fecha por tu fecha especial
-          title="Juntos desde"
-        />
-      ),
-      duration: 6000
-    },
-    
-    // Slide 6: Mensaje romántico
-    {
-      content: () => (
-        <TextSlide 
-          message="Eres mi todo"
-          subtitle="Mi presente y mi futuro"
-          gradient="from-valentine-dark-red via-valentine-red to-valentine-pink"
-        />
-      ),
-      duration: 5000
-    },
-    
-    // Slide 7: Otra imagen romántica
-    {
-      url: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=800&q=80',
-      duration: 5000,
-      header: {
-        heading: 'Para siempre',
-        subheading: '',
-        profileImage: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80'
-      }
-    },
-    
-    // Slide 8: Slide final
-    {
-      content: () => (
-        <FinalSlide 
-          message="Te amo infinitamente"
-          emoji="💖"
-          showShareButton={true}
-        />
-      ),
-      duration: 6000
-    }
+    { content: () => <PhotoYearSlide imageUrl={image('2018')} year="2018" />, duration: 5000 },
+    { content: () => <PhotoYearSlide imageUrl={image('2019')} year="2019" />, duration: 5000 },
+    { content: () => <PhotoYearSlide imageUrl={image('2022')} year="2022" />, duration: 5000 },
+    { content: () => <PhotoYearSlide imageUrl={image('2024')} year="2024" />, duration: 5000 },
+    { content: () => <PhotoYearSlide imageUrl={image('2025')} year="2025" />, duration: 5000 },
   ];
 
   // Manejar eventos de las stories
