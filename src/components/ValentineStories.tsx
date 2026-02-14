@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Stories from 'react-insta-stories';
 import PhotoYearSlide from './CustomSlides/PhotoYearSlide';
+import MessageSlide from './CustomSlides/MessageSlide';
 
 interface ValentineStoriesProps {
   /** Si false, al terminar todas las stories se llama onAllStoriesEnd en vez de hacer loop */
@@ -53,13 +54,14 @@ const ValentineStories: React.FC<ValentineStoriesProps> = ({
   // Rutas de imágenes (public/images) — compatible con GitHub Pages
   const image = (name: string) => `${base}images/${name}.png`;
 
-  // Header tipo Instagram: círculo de usuario + nombre + cuenta (1/5, 2/5, ...)
+  // Header tipo Instagram: círculo de usuario + nombre + cuenta (1/6, 2/6, ...)
   const stories = [
-    { content: () => <PhotoYearSlide imageUrl={image('2018')} year="2018" />, duration: 8000, header: { heading: 'Lupita & Juan', subheading: '1/5', profileImage: image('2025') } },
-    { content: () => <PhotoYearSlide imageUrl={image('2019')} year="2019" />, duration: 8000, header: { heading: 'Lupita & Juan', subheading: '2/5', profileImage: image('2025') } },
-    { content: () => <PhotoYearSlide imageUrl={image('2022')} year="2022" />, duration: 8000, header: { heading: 'Lupita & Juan', subheading: '3/5', profileImage: image('2025') } },
-    { content: () => <PhotoYearSlide imageUrl={image('2024')} year="2024" />, duration: 8000, header: { heading: 'Lupita & Juan', subheading: '4/5', profileImage: image('2025') } },
-    { content: () => <PhotoYearSlide imageUrl={image('2025')} year="2025" />, duration: 8000, header: { heading: 'Lupita & Juan', subheading: '5/5', profileImage: image('2025') } },
+    { content: () => <PhotoYearSlide imageUrl={image('2018')} year="2018" />, duration: 8000, header: { heading: 'Lupita & Juan', subheading: '1/6', profileImage: image('2025') } },
+    { content: () => <PhotoYearSlide imageUrl={image('2019')} year="2019" />, duration: 8000, header: { heading: 'Lupita & Juan', subheading: '2/6', profileImage: image('2025') } },
+    { content: () => <PhotoYearSlide imageUrl={image('2022')} year="2022" />, duration: 8000, header: { heading: 'Lupita & Juan', subheading: '3/6', profileImage: image('2025') } },
+    { content: () => <PhotoYearSlide imageUrl={image('2024')} year="2024" />, duration: 8000, header: { heading: 'Lupita & Juan', subheading: '4/6', profileImage: image('2025') } },
+    { content: () => <PhotoYearSlide imageUrl={image('2025')} year="2025" />, duration: 8000, header: { heading: 'Lupita & Juan', subheading: '5/6', profileImage: image('2025') } },
+    { content: () => <MessageSlide message="Si el mundo se acabara quiero estar junto a ti, Te Amo" />, duration: 10000, header: { heading: 'Lupita & Juan', subheading: '6/6', profileImage: image('2025') } },
   ];
 
   // Manejar eventos de las stories
