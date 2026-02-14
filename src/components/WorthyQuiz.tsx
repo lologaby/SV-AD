@@ -157,37 +157,43 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
 
   const progressPercent = ((currentIndex + (showFeedback ? 1 : 0)) / questions.length) * 100;
 
-  // ——— Fase: Bienvenida (gradiente holográfico / tornasol) ———
+  // ——— Fase: Bienvenida (estilo Duolingo minimalista) ———
   if (phase === 'welcome') {
     return (
-      <div className="w-full quiz-fullscreen relative overflow-hidden bg-gradient-holographic px-6 py-10">
-        <div className="relative z-10 flex flex-col items-center">
-          <p className="text-2xl md:text-3xl font-duo font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)] mb-2">Hola Muñeca!</p>
-          <p className="text-white/95 font-duo text-lg text-center mb-8 drop-shadow-[0_1px_4px_rgba(0,0,0,0.2)]">¿Esta invitación romántica es para ti?</p>
+      <div className="w-full quiz-fullscreen relative overflow-hidden bg-duo-snow px-6 py-10 flex items-center justify-center">
+        <div className="relative z-10 flex flex-col items-center max-w-md w-full">
+          {/* Duo celebrando */}
+          <div className="mb-6 animate-fade-in">
+            <img src={`${DUOLINGO_ASSETS_BASE}/${DUO_SVG_IDS[0]}`} alt="" className="h-32 w-auto object-contain" width={128} height={128} />
+          </div>
+          
+          <h1 className="text-3xl md:text-4xl font-duo font-bold text-duo-eel mb-3 text-center">Hola Muñeca!</h1>
+          <p className="text-duo-eel/80 font-duo text-lg text-center mb-10">¿Esta invitación romántica es para ti?</p>
+          
           {saidNo ? (
-            <div className="flex flex-col items-center gap-4">
-              <p className="text-white/90 font-duo text-center drop-shadow-[0_1px_3px_rgba(0,0,0,0.2)]">Esta invitación es solo para ti 💕</p>
+            <div className="flex flex-col items-center gap-4 w-full">
+              <p className="text-duo-eel/70 font-duo text-center mb-2">Esta invitación es solo para ti 💕</p>
               <button
                 type="button"
                 onClick={() => { setSaidNo(false); setPhase('name'); }}
-                className="min-h-[44px] px-8 py-3 rounded-2xl bg-white/90 text-purple-700 font-duo font-bold shadow-lg hover:bg-white hover:scale-[1.02] transition backdrop-blur-sm"
+                className="w-full max-w-xs min-h-[48px] px-8 py-4 rounded-2xl bg-duo-green text-white font-duo font-bold shadow-lg hover:bg-duo-green-light hover:scale-[1.02] transition-transform active:scale-[0.98]"
               >
                 Sí, es para mí
               </button>
             </div>
           ) : (
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-3 w-full max-w-xs">
               <button
                 type="button"
                 onClick={() => setPhase('name')}
-                className="min-h-[44px] px-8 py-3 rounded-2xl bg-duo-green text-white font-duo font-bold shadow-lg hover:bg-duo-green-light hover:scale-[1.02] transition"
+                className="w-full min-h-[48px] px-8 py-4 rounded-2xl bg-duo-green text-white font-duo font-bold shadow-lg hover:bg-duo-green-light hover:scale-[1.02] transition-transform active:scale-[0.98]"
               >
                 Sí
               </button>
               <button
                 type="button"
                 onClick={() => setSaidNo(true)}
-                className="min-h-[44px] px-8 py-3 rounded-2xl bg-white/80 text-gray-700 font-duo font-bold hover:bg-white/90 hover:scale-[1.02] transition backdrop-blur-sm"
+                className="w-full min-h-[48px] px-8 py-4 rounded-2xl bg-white border-2 border-gray-300 text-duo-eel font-duo font-bold hover:bg-gray-50 hover:scale-[1.02] transition-transform active:scale-[0.98]"
               >
                 No
               </button>
@@ -212,25 +218,34 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
       setPhase('quiz');
     };
     return (
-      <div className="w-full quiz-fullscreen relative overflow-hidden bg-gradient-holographic px-6 py-10">
-        <div className="relative z-10 flex flex-col items-center w-full max-w-xs">
-          <p className="text-xl font-duo font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.25)] mb-2">Escribe tu nombre</p>
-          <form onSubmit={handleNameSubmit} className="w-full flex flex-col items-center gap-4">
+      <div className="w-full quiz-fullscreen relative overflow-hidden bg-duo-snow px-6 py-10 flex items-center justify-center">
+        <div className="relative z-10 flex flex-col items-center w-full max-w-md">
+          {/* Duo pensativo */}
+          <div className="mb-6 animate-fade-in">
+            <img src={`${DUOLINGO_ASSETS_BASE}/${DUO_SVG_IDS[2]}`} alt="" className="h-28 w-auto object-contain" width={112} height={112} />
+          </div>
+          
+          <h2 className="text-2xl font-duo font-bold text-duo-eel mb-8 text-center">Escribe tu nombre</h2>
+          
+          <form onSubmit={handleNameSubmit} className="w-full max-w-xs flex flex-col items-center gap-4">
             <input
               type="text"
               value={nameInput}
               onChange={(e) => { setNameInput(e.target.value); setNameError(false); }}
               placeholder="Tu nombre"
-              className="w-full px-4 py-3 rounded-xl border-2 border-white/50 bg-white/90 focus:border-white focus:ring-2 focus:ring-white/50 focus:outline-none font-duo text-center text-lg text-gray-800 placeholder-gray-500 backdrop-blur-sm"
+              className="w-full px-4 py-4 rounded-2xl border-2 border-gray-300 bg-white focus:border-duo-blue focus:ring-2 focus:ring-duo-blue/20 focus:outline-none font-duo text-center text-lg text-duo-eel placeholder-gray-400 transition-colors"
               autoFocus
               autoComplete="off"
             />
             {nameError && (
-              <p className="text-white font-duo text-sm drop-shadow-[0_1px_3px_rgba(0,0,0,0.3)]">Ese no es tu nombre. Intenta de nuevo.</p>
+              <div className="flex flex-col items-center gap-2 animate-fade-in">
+                <img src={`${DUOLINGO_ASSETS_BASE}/${DUO_SVG_IDS[1]}`} alt="" className="h-12 w-auto object-contain" width={48} height={48} />
+                <p className="text-duo-red font-duo text-sm text-center">Ese no es tu nombre. Intenta de nuevo.</p>
+              </div>
             )}
             <button
               type="submit"
-              className="min-h-[44px] px-8 py-3 rounded-2xl bg-duo-green text-white font-duo font-bold shadow-lg hover:bg-duo-green-light hover:scale-[1.02] transition"
+              className="w-full min-h-[48px] px-8 py-4 rounded-2xl bg-duo-green text-white font-duo font-bold shadow-lg hover:bg-duo-green-light hover:scale-[1.02] transition-transform active:scale-[0.98]"
             >
               Continuar
             </button>

@@ -8,7 +8,7 @@ export interface PhotoYearSlideProps {
 
 /**
  * Slide de foto con sticker del año (estilo story)
- * La imagen cubre todo el espacio y el año aparece como sticker
+ * La imagen cubre todo el espacio y el año aparece como sticker centrado
  */
 const PhotoYearSlide: React.FC<PhotoYearSlideProps> = ({ imageUrl, year }) => {
   return (
@@ -19,7 +19,7 @@ const PhotoYearSlide: React.FC<PhotoYearSlideProps> = ({ imageUrl, year }) => {
         className="absolute inset-0 w-full h-full object-cover"
         loading="eager"
       />
-      <YearSticker year={year} position="top-right" />
+      <YearSticker year={year} position="center" />
     </div>
   );
 };
