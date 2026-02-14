@@ -6,6 +6,10 @@ import ProfileSwitchAnimation from './components/ProfileSwitchAnimation'
 
 type Stage = 'quiz' | 'stories' | 'profile_switch'
 
+// Helper para rutas de imágenes con BASE_URL
+const base = import.meta.env.BASE_URL;
+const image = (path: string) => `${base}${path}`;
+
 // Preguntas para la prueba "¿Eres digno/a?" — personaliza con datos reales de la pareja
 const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
@@ -14,10 +18,10 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
     options: ['Churrasco', 'Diavola', 'Oeufs', 'Smash'],
     correctIndex: 2,
     imageOptions: [
-      { image: '/images/churrasco.jpg', label: 'Churrasco' },
-      { image: '/images/diavola.avif', label: 'Diavola' },
-      { image: '/images/oeufs.webp', label: 'Oeufs' },
-      { image: '/images/smash.avif', label: 'Smash' },
+      { image: image('images/churrasco.jpg'), label: 'Churrasco' },
+      { image: image('images/diavola.avif'), label: 'Diavola' },
+      { image: image('images/oeufs.webp'), label: 'Oeufs' },
+      { image: image('images/smash.avif'), label: 'Smash' },
     ],
   },
   {
@@ -47,8 +51,8 @@ function App() {
           questions={QUIZ_QUESTIONS}
           minCorrect={2}
           onPass={() => setStage('stories')}
-          passGifUrl="shrek.gif"
-          passGifFallbackUrl="shrek-approval.png"
+          passGifUrl={image('shrek.gif')}
+          passGifFallbackUrl={image('shrek-approval.png')}
         />
       )}
 
@@ -68,9 +72,9 @@ function App() {
             time: '7:10 PM',
             seats: 'K10, K11',
             screen: 'Sala 7',
-            qrImageUrl: 'qr-tickets.png',
+            qrImageUrl: image('qr-tickets.png'),
             ticketNumber: '#9338842',
-            posterUrl: 'poster-entre-las-vias.png',
+            posterUrl: image('poster-entre-las-vias.png'),
             message: '¿Me aceptas esta humilde invitación al cine?',
           }}
         />
