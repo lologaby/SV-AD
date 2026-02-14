@@ -1,0 +1,19 @@
+Para que tus cambios aparezcan en GitHub y en la pagina web, hacen falta 3 pasos:
+
+1. GUARDAR los archivos en el editor (Ctrl+S).
+
+2. AÑADIR los cambios a Git:
+   git add -A
+
+3. HACER COMMIT y PUSH:
+   git commit -m "descripcion del cambio"
+   git push origin main
+
+Si solo haces "commit" sin "git add", Git no incluye los archivos modificados.
+Si solo haces "commit" sin "push", los cambios se quedan en tu PC y no suben a GitHub.
+
+ATAJO: Puedes usar el script push.cmd con tu mensaje y hace todo junto:
+   push.cmd "mi mensaje"
+
+Ejemplo:
+   push.cmd "actualizar texto"
