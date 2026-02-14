@@ -23,7 +23,7 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
     question: '¿A qué lugar fuimos en nuestro primer Date?',
     options: ['Al cine', 'A Ben & Jerry\'s', 'Cold Stone', 'El Bori'],
-    correctIndex: 0, // Cambia al índice correcto (0-3)
+    correctIndex: 2, // Cold Stone
   },
   {
     question: '¿En qué mes nos conocimos?',
