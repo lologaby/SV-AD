@@ -90,3 +90,113 @@ export function playSoundFromFile(filename: 'correct' | 'wrong'): void {
       else playWrong();
     });
 }
+
+/**
+ * Interfaz para controlar música de fondo reproducida con Web Audio API.
+ */
+export interface MusicController {
+  play: () => Promise<void>;
+  stop: () => void;
+  isPlaying: () => boolean;
+}
+
+/**
+ * Crea un controlador para reproducir música de fondo usando Web Audio API.
+ * No muestra controles de audio en Safari ni otros navegadores.
+ * 
+ * @param filename - Nombre del archivo en public/sounds/ (sin extensión)
+ * @param startTime - Segundo desde donde empezar (ej. 80 para 1:20)
+ * @param loop - Si debe repetirse al terminar
+ * @param volume - Volumen de 0 a 1
+ */
+export function createMusicPlayer(
+  filename: string,
+  startTime: number = 0,
+  loop: boolean = true,
+  volume: number = 0.5
+): MusicController {
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/');
+  const url = `${base}sounds/${filename}.mp3`;
+  
+  let source: AudioBufferSourceNode | null = null;
+  let gainNode: GainNode | null = null;
+  let audioBuffer: AudioBuffer | null = null;
+  let playing = false;
+  let loaded = false;
+
+  // Precargar el audio
+  const loadPromise = fetch(url)
+    .then((res) => res.arrayBuffer())
+    .then((buffer) => {
+      const ctx = getAudioContext();
+      return ctx.decodeAudioData(buffer);
+    })
+    .then((decoded) => {
+      audioBuffer = decoded;
+      loaded = true;
+    })
+    .catch(() => {
+      // Error cargando audio
+    });
+
+  const play = async (): Promise<void> => {
+    if (playing) return;
+    
+    // Esperar a que cargue si no ha cargado
+    if (!loaded) {
+      await loadPromise;
+    }
+    
+    if (!audioBuffer) return;
+
+    const ctx = getAudioContext();
+    await resumeContext(ctx);
+
+    source = ctx.createBufferSource();
+    source.buffer = audioBuffer;
+    source.loop = loop;
+    
+    // Si hay loop, configurar el punto de loop
+    if (loop) {
+      source.loopStart = startTime;
+      source.loopEnd = audioBuffer.duration;
+    }
+
+    gainNode = ctx.createGain();
+    gainNode.gain.value = volume;
+    
+    source.connect(gainNode);
+    gainNode.connect(ctx.destination);
+    
+    // Empezar desde startTime
+    source.start(0, startTime);
+    playing = true;
+
+    source.onended = () => {
+      if (!loop) {
+        playing = false;
+      }
+    };
+  };
+
+  const stop = (): void => {
+    if (source && playing) {
+      try {
+        source.stop();
+      } catch {
+        // Ya estaba detenido
+      }
+      source.disconnect();
+      source = null;
+    }
+    if (gainNode) {
+      gainNode.disconnect();
+      gainNode = null;
+    }
+    playing = false;
+  };
+
+  const isPlaying = (): boolean => playing;
+
+  return { play, stop, isPlaying };
+}

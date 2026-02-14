@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { createMusicPlayer, type MusicController } from '../utils/duoSounds';
 
 /** 14 Feb 2026 12:00 AM Eastern = 05:00 UTC */
 const TARGET_UTC = '2026-02-14T05:00:00.000Z';
@@ -57,43 +58,30 @@ const CountdownScreen: React.FC<CountdownScreenProps> = ({ onReached }) => {
   const target = getTargetDate();
   const [remaining, setRemaining] = useState(() => getRemaining(new Date(), target));
   const [musicPlaying, setMusicPlaying] = useState(false);
-  const [showMusicButton, setShowMusicButton] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [showMusicButton, setShowMusicButton] = useState(true);
+  const musicRef = useRef<MusicController | null>(null);
 
-  // Música de fondo: dtmf.mp3 desde 1:20
+  // Crear el reproductor de música (Web Audio API, sin mostrar controles)
   useEffect(() => {
-    const base = import.meta.env.BASE_URL || '/';
-    const musicUrl = `${base}sounds/dtmf.mp3`;
-    const audio = new Audio(musicUrl);
-    audio.currentTime = COUNTDOWN_MUSIC_START_SEC;
-    audio.loop = true;
-    audioRef.current = audio;
-
-    // Intentar autoplay
-    const p = audio.play();
-    if (p !== undefined) {
-      p.then(() => {
-        setMusicPlaying(true);
-      }).catch(() => {
-        // Autoplay bloqueado - mostrar botón
-        setShowMusicButton(true);
-      });
-    }
-
+    musicRef.current = createMusicPlayer('dtmf', COUNTDOWN_MUSIC_START_SEC, true, 0.5);
+    
     return () => {
-      audio.pause();
-      audioRef.current = null;
+      if (musicRef.current) {
+        musicRef.current.stop();
+      }
     };
   }, []);
 
   // Función para activar música manualmente
-  const handlePlayMusic = () => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = COUNTDOWN_MUSIC_START_SEC;
-      audioRef.current.play().then(() => {
+  const handlePlayMusic = async () => {
+    if (musicRef.current) {
+      try {
+        await musicRef.current.play();
         setMusicPlaying(true);
         setShowMusicButton(false);
-      }).catch(() => {});
+      } catch {
+        // Error reproduciendo
+      }
     }
   };
 
@@ -184,7 +172,7 @@ const CountdownScreen: React.FC<CountdownScreenProps> = ({ onReached }) => {
           </div>
         </div>
 
-        {/* Botón de música (solo si autoplay falló) */}
+        {/* Botón de música */}
         {showMusicButton && !musicPlaying && (
           <button
             onClick={handlePlayMusic}
