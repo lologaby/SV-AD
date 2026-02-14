@@ -7,6 +7,16 @@ const STORAGE_KEY_SKIP = 'sv-ad-countdown-skip';
 /** Reproducir dtmf.mp3 desde 1:20 (80 s) en el countdown */
 const COUNTDOWN_MUSIC_START_SEC = 80;
 
+/** Assets oficiales desde Duolingo Brand Guidelines */
+const DUOLINGO_ASSETS_BASE = 'https://design.duolingo.com';
+const DUO_SVG_IDS = [
+  'a57733350c2c9a01fd6e.svg', // celebrando
+  'fe225c25f1c6afe81424.svg', // sorprendido
+  '215f9f8714df8f7de63c.svg', // pensativo
+  'ad9ec13f2b161e008ab1.svg', 
+  '9a6ea4292d92aebb9c5a.svg', // guiñando
+];
+
 function getTargetDate(): Date {
   return new Date(TARGET_UTC);
 }
@@ -77,27 +87,81 @@ const CountdownScreen: React.FC<CountdownScreenProps> = ({ onReached }) => {
   const pad = (n: number) => String(n).padStart(2, '0');
 
   return (
-    <div className="h-screen-safe w-screen bg-black flex flex-col items-center justify-center px-6 font-duo text-white">
-      <h1 className="text-2xl md:text-3xl font-bold text-center mb-2">Duolingo de Amor</h1>
-      <p className="text-white/80 text-center mb-8">La invitación se abre el 14 de febrero a las 12:00 AM (hora del Este)</p>
+    <div className="w-full h-screen-safe relative overflow-hidden bg-duo-snow px-6 py-10 flex items-center justify-center">
+      <div className="relative z-10 flex flex-col items-center max-w-md w-full">
+        {/* Duo guiñando */}
+        <div className="mb-6 animate-fade-in">
+          <img 
+            src={`${DUOLINGO_ASSETS_BASE}/${DUO_SVG_IDS[4]}`} 
+            alt="Duo guiñando" 
+            className="h-32 w-auto object-contain" 
+            width={128} 
+            height={128} 
+          />
+        </div>
+        
+        <h1 className="text-2xl md:text-3xl font-duo font-bold text-duo-eel mb-2 text-center">
+          Duolingo de Amor
+        </h1>
+        <p className="text-duo-eel/70 font-duo text-base text-center mb-8">
+          La tarjeta virtual se abre el <span className="font-bold text-duo-eel">14 de febrero</span> a las 12:00 AM
+        </p>
 
-      <div className="flex gap-3 sm:gap-4 mb-2">
-        <div className="flex flex-col items-center bg-white/10 rounded-xl px-4 py-3 min-w-[64px]">
-          <span className="text-3xl sm:text-4xl font-bold tabular-nums">{remaining.d}</span>
-          <span className="text-xs text-white/70 uppercase tracking-wider mt-1">días</span>
+        {/* Countdown cards estilo Duolingo */}
+        <div className="flex gap-2 sm:gap-3 mb-6">
+          {/* Días */}
+          <div className="flex flex-col items-center">
+            <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 px-3 sm:px-5 py-3 sm:py-4 min-w-[60px] sm:min-w-[72px]">
+              <span className="text-2xl sm:text-4xl font-duo font-bold text-duo-eel tabular-nums">
+                {remaining.d}
+              </span>
+            </div>
+            <span className="text-xs font-duo font-bold text-duo-eel/60 uppercase tracking-wider mt-2">
+              días
+            </span>
+          </div>
+
+          {/* Horas */}
+          <div className="flex flex-col items-center">
+            <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 px-3 sm:px-5 py-3 sm:py-4 min-w-[60px] sm:min-w-[72px]">
+              <span className="text-2xl sm:text-4xl font-duo font-bold text-duo-eel tabular-nums">
+                {pad(remaining.h)}
+              </span>
+            </div>
+            <span className="text-xs font-duo font-bold text-duo-eel/60 uppercase tracking-wider mt-2">
+              horas
+            </span>
+          </div>
+
+          {/* Minutos */}
+          <div className="flex flex-col items-center">
+            <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 px-3 sm:px-5 py-3 sm:py-4 min-w-[60px] sm:min-w-[72px]">
+              <span className="text-2xl sm:text-4xl font-duo font-bold text-duo-eel tabular-nums">
+                {pad(remaining.m)}
+              </span>
+            </div>
+            <span className="text-xs font-duo font-bold text-duo-eel/60 uppercase tracking-wider mt-2">
+              min
+            </span>
+          </div>
+
+          {/* Segundos */}
+          <div className="flex flex-col items-center">
+            <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 px-3 sm:px-5 py-3 sm:py-4 min-w-[60px] sm:min-w-[72px]">
+              <span className="text-2xl sm:text-4xl font-duo font-bold text-duo-green tabular-nums">
+                {pad(remaining.s)}
+              </span>
+            </div>
+            <span className="text-xs font-duo font-bold text-duo-eel/60 uppercase tracking-wider mt-2">
+              seg
+            </span>
+          </div>
         </div>
-        <div className="flex flex-col items-center bg-white/10 rounded-xl px-4 py-3 min-w-[64px]">
-          <span className="text-3xl sm:text-4xl font-bold tabular-nums">{pad(remaining.h)}</span>
-          <span className="text-xs text-white/70 uppercase tracking-wider mt-1">horas</span>
-        </div>
-        <div className="flex flex-col items-center bg-white/10 rounded-xl px-4 py-3 min-w-[64px]">
-          <span className="text-3xl sm:text-4xl font-bold tabular-nums">{pad(remaining.m)}</span>
-          <span className="text-xs text-white/70 uppercase tracking-wider mt-1">min</span>
-        </div>
-        <div className="flex flex-col items-center bg-white/10 rounded-xl px-4 py-3 min-w-[64px]">
-          <span className="text-3xl sm:text-4xl font-bold tabular-nums">{pad(remaining.s)}</span>
-          <span className="text-xs text-white/70 uppercase tracking-wider mt-1">seg</span>
-        </div>
+
+        {/* Mensaje adicional */}
+        <p className="text-duo-eel/50 font-duo text-sm text-center mt-4">
+          ¡Pronto llegará tu sorpresa! 💚
+        </p>
       </div>
     </div>
   );
