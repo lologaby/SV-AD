@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import WorthyQuiz from './components/WorthyQuiz'
 import type { QuizQuestion } from './components/WorthyQuiz'
 import ValentineStories from './components/ValentineStories'
