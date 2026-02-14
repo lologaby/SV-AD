@@ -5,13 +5,18 @@ import ValentineStories from './components/ValentineStories'
 import ProfileSwitchAnimation from './components/ProfileSwitchAnimation'
 import CountdownScreen, { isCountdownReachedOrSkipped, setCountdownSkipped } from './components/CountdownScreen'
 
-type Stage = 'quiz' | 'stories' | 'profile_switch'
+type Stage = 'welcome_back' | 'quiz' | 'stories' | 'profile_switch'
 
 const STORAGE_KEY_PASSED = 'sv-ad-passed'
 
+/** Duolingo assets */
+const DUOLINGO_ASSETS_BASE = 'https://design.duolingo.com';
+const DUO_WINK = '9a6ea4292d92aebb9c5a.svg';
+
 function getInitialStage(): Stage {
   if (typeof window === 'undefined') return 'quiz'
-  return localStorage.getItem(STORAGE_KEY_PASSED) ? 'stories' : 'quiz'
+  // Si ya pasó el quiz, mostrar pantalla de "bienvenida" que requiere tap (para desbloquear audio)
+  return localStorage.getItem(STORAGE_KEY_PASSED) ? 'welcome_back' : 'quiz'
 }
 
 function getShowCountdown(): boolean {
@@ -82,6 +87,31 @@ function App() {
 
   return (
     <div className="h-screen-safe w-screen bg-black">
+      {/* Pantalla de bienvenida para usuarios que regresan (requiere tap para desbloquear audio) */}
+      {stage === 'welcome_back' && (
+        <div className="w-full h-full bg-duo-snow flex flex-col items-center justify-center px-6">
+          <div className="flex flex-col items-center max-w-md w-full">
+            <img 
+              src={`${DUOLINGO_ASSETS_BASE}/${DUO_WINK}`} 
+              alt="Duo" 
+              className="h-32 w-auto object-contain mb-6 animate-fade-in" 
+            />
+            <h1 className="text-2xl md:text-3xl font-duo font-bold text-duo-eel mb-3 text-center">
+              ¡Hola de nuevo!
+            </h1>
+            <p className="text-duo-eel/70 font-duo text-base text-center mb-8">
+              Toca para continuar viendo tu tarjeta
+            </p>
+            <button
+              onClick={() => setStage('stories')}
+              className="px-8 py-4 rounded-2xl bg-duo-green text-white font-duo font-bold text-lg shadow-lg hover:bg-duo-green-light hover:scale-[1.02] transition-transform active:scale-[0.98]"
+            >
+              Continuar
+            </button>
+          </div>
+        </div>
+      )}
+
       {stage === 'quiz' && (
         <WorthyQuiz
           questions={QUIZ_QUESTIONS}
