@@ -19,20 +19,32 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      # Build desde la raíz del repo (donde está package.json)
+      # Directorio del proyecto: raíz o subcarpeta SV-AD según estructura del repo
+      - name: Set project dir
+        id: project
+        run: |
+          if [ -f package.json ]; then
+            echo "dir=." >> $GITHUB_OUTPUT
+          elif [ -f SV-AD/package.json ]; then
+            echo "dir=SV-AD" >> $GITHUB_OUTPUT
+          else
+            echo "No package.json found"
+            exit 1
+          fi
+
       - name: Install and build
         run: |
           npm ci
           npm run build
+        working-directory: ${{ steps.project.outputs.dir }}
 
-      # Comprobar que dist se generó (útil si la página no actualiza)
       - name: List dist
         run: ls -la dist/
+        working-directory: ${{ steps.project.outputs.dir }}
 
-      # Sube la carpeta dist a la rama gh-pages
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: ${{ steps.project.outputs.dir }}/dist
           force_orphan: true
