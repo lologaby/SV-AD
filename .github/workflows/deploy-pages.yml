@@ -19,15 +19,20 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      # Build desde la raíz del repo (donde está package.json)
       - name: Install and build
         run: |
           npm ci
           npm run build
 
-      # Sube la carpeta dist a la rama gh-pages (método clásico, muy fiable)
+      # Comprobar que dist se generó (útil si la página no actualiza)
+      - name: List dist
+        run: ls -la dist/
+
+      # Sube la carpeta dist a la rama gh-pages
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          force_orphan: true  # rama gh-pages solo con el contenido actual
+          force_orphan: true
