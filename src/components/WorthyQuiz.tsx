@@ -65,6 +65,12 @@ interface WorthyQuizProps {
  */
 const EXPECTED_NAME = 'Dayralee';
 
+/** Detecta si el valor es una URL/ruta de imagen (no emoji) */
+function isImageUrl(value: string): boolean {
+  if (!value || value.length > 200) return false;
+  return value.startsWith('/') || value.startsWith('http') || /\.(jpg|jpeg|png|gif|webp|avif|svg)(\?|$)/i.test(value);
+}
+
 const WorthyQuiz: React.FC<WorthyQuizProps> = ({
   questions,
   minCorrect = 2,
@@ -460,7 +466,15 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
             >
               {isImageQuestion && optionImage ? (
                 <>
-                  <span className="text-4xl md:text-5xl mb-1" aria-hidden>{optionImage}</span>
+                  {isImageUrl(optionImage) ? (
+                    <img
+                      src={optionImage}
+                      alt={optionText ?? ''}
+                      className="w-full h-20 sm:h-24 object-cover rounded-xl mb-1"
+                    />
+                  ) : (
+                    <span className="text-4xl md:text-5xl mb-1" aria-hidden>{optionImage}</span>
+                  )}
                   {optionText && <span className="text-sm font-normal">{optionText}</span>}
                   {showResult && correct && <span className="text-duo-green-dark text-2xl mt-1">✓</span>}
                   {showResult && isWrongChoice && <span className="text-duo-red-dark text-2xl mt-1">✗</span>}
