@@ -174,7 +174,7 @@ const WorthyQuiz: React.FC<WorthyQuizProps> = ({
           </div>
           
           <h1 className="text-3xl md:text-4xl font-duo font-bold text-duo-eel mb-3 text-center">Hola Muñeca!</h1>
-          <p className="text-duo-eel/80 font-duo text-lg text-center mb-10">¿Esta invitación romántica es para ti?</p>
+          <p className="text-duo-eel/80 font-duo text-lg text-center mb-10">¿Esta tarjeta super mega especial es para ti?</p>
           
           {saidNo ? (
             <div className="flex flex-col items-center gap-4 w-full">
