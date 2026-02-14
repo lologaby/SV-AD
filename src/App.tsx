@@ -9,15 +9,15 @@ type Stage = 'quiz' | 'stories' | 'profile_switch'
 // Preguntas para la prueba "¿Eres digno/a?" — personaliza con datos reales de la pareja
 const QUIZ_QUESTIONS: QuizQuestion[] = [
   {
-    question: '¿Cuál representa nuestro amor?',
+    question: 'Si tuviera que dejar alguno de estos alimentos, ¿cuál crees que se me haría imposible dejar?',
     questionType: 'image',
-    options: ['💕', '🎁', '💔', '🍕'],
-    correctIndex: 0,
+    options: ['Churrasco', 'Diavola', 'Oeufs', 'Smash'],
+    correctIndex: 2,
     imageOptions: [
-      { image: '💕', label: 'Corazones' },
-      { image: '🎁', label: 'Regalo' },
-      { image: '💔', label: 'Corazón roto' },
-      { image: '🍕', label: 'Pizza' },
+      { image: '/images/churrasco.jpg', label: 'Churrasco' },
+      { image: '/images/diavola.avif', label: 'Diavola' },
+      { image: '/images/oeufs.webp', label: 'Oeufs' },
+      { image: '/images/smash.avif', label: 'Smash' },
     ],
   },
   {
