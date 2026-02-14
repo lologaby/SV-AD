@@ -6,6 +6,13 @@ import ProfileSwitchAnimation from './components/ProfileSwitchAnimation'
 
 type Stage = 'quiz' | 'stories' | 'profile_switch'
 
+const STORAGE_KEY_PASSED = 'sv-ad-passed'
+
+function getInitialStage(): Stage {
+  if (typeof window === 'undefined') return 'quiz'
+  return localStorage.getItem(STORAGE_KEY_PASSED) ? 'stories' : 'quiz'
+}
+
 // Helper para rutas de imágenes con BASE_URL
 const base = import.meta.env.BASE_URL;
 const image = (path: string) => `${base}${path}`;
@@ -16,7 +23,7 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
     question: 'Si tuviera que dejar alguno de estos alimentos, ¿cuál crees que se me haría imposible dejar?',
     questionType: 'image',
     options: ['Churrasco', 'Diavola', 'Oeufs', 'Smash'],
-    correctIndex: 2,
+    correctIndex: 1,
     imageOptions: [
       { image: image('images/churrasco.jpg'), label: 'Churrasco' },
       { image: image('images/diavola.avif'), label: 'Diavola' },
@@ -42,7 +49,12 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
 ]
 
 function App() {
-  const [stage, setStage] = useState<Stage>('quiz')
+  const [stage, setStage] = useState<Stage>(getInitialStage)
+
+  const handleQuizPass = () => {
+    localStorage.setItem(STORAGE_KEY_PASSED, '1')
+    setStage('stories')
+  }
 
   return (
     <div className="h-screen-safe w-screen bg-black">
@@ -50,7 +62,7 @@ function App() {
         <WorthyQuiz
           questions={QUIZ_QUESTIONS}
           minCorrect={2}
-          onPass={() => setStage('stories')}
+          onPass={handleQuizPass}
           passGifUrl={image('shrek.gif')}
           passGifFallbackUrl={image('shrek-approval.png')}
         />

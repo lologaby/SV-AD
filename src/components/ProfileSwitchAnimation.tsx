@@ -32,19 +32,12 @@ const ProfileSwitchAnimation: React.FC<ProfileSwitchAnimationProps> = ({
   onComplete,
   cinemaInvite = {},
 }) => {
-  const [phase, setPhase] = useState<'swiping' | 'transition' | 'story'>('swiping');
+  const [phase, setPhase] = useState<'swiping' | 'story'>('swiping');
 
-  // Fase 1: Animación de swipe left (deslizamiento)
+  // Fase 1: Animación de swipe left, luego saltar directo al story de la taquilla
   useEffect(() => {
     if (phase !== 'swiping') return;
-    const t = setTimeout(() => setPhase('transition'), 400);
-    return () => clearTimeout(t);
-  }, [phase]);
-
-  // Fase 2: Transición breve antes de mostrar el nuevo story
-  useEffect(() => {
-    if (phase !== 'transition') return;
-    const t = setTimeout(() => setPhase('story'), 300);
+    const t = setTimeout(() => setPhase('story'), 400);
     return () => clearTimeout(t);
   }, [phase]);
 
@@ -101,24 +94,7 @@ const ProfileSwitchAnimation: React.FC<ProfileSwitchAnimationProps> = ({
     );
   }
 
-  // Fase 2: Transición breve (header completo visible)
-  if (phase === 'transition') {
-    return (
-      <div className="stories-container bg-black">
-        {/* Header del nuevo perfil */}
-        <div className="absolute top-0 left-0 right-0 z-30 bg-black/50 backdrop-blur-sm border-b border-white/10">
-          <ProfileHeader />
-        </div>
-
-        {/* Contenido en transición */}
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-white/80 font-body animate-fade-in">Cargando story...</div>
-        </div>
-      </div>
-    );
-  }
-
-  // Fase 3: Mostrar el story de invitación al cine (con header del nuevo perfil)
+  // Fase 2: Mostrar el story de la taquilla (invitación al cine)
   return (
     <div className="stories-container bg-black">
       {/* Header del perfil Caribbean Cinemas (como en Instagram Stories) */}

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import Stories from 'react-insta-stories';
 import PhotoYearSlide from './CustomSlides/PhotoYearSlide';
 
@@ -9,6 +9,9 @@ interface ValentineStoriesProps {
   onAllStoriesEnd?: () => void;
 }
 
+/** Reproduce Die.mp3 desde el segundo 40 cuando empiezan las stories */
+const STORIES_MUSIC_START_TIME = 40;
+
 /**
  * Componente principal de las Stories de San Valentín
  * Integra todos los slides personalizados y configura react-insta-stories
@@ -18,6 +21,27 @@ const ValentineStories: React.FC<ValentineStoriesProps> = ({
   onAllStoriesEnd,
 }) => {
   const [isPaused] = useState(false);
+  const musicPlayedRef = useRef(false);
+
+  const base = import.meta.env.BASE_URL;
+  const musicUrl = `${base}sounds/Die.mp3`;
+
+  // Reproducir Die.mp3 desde segundo 40 al iniciar las stories
+  useEffect(() => {
+    if (musicPlayedRef.current) return;
+    musicPlayedRef.current = true;
+    const audio = new Audio(musicUrl);
+    audio.currentTime = STORIES_MUSIC_START_TIME;
+    const p = audio.play();
+    if (p !== undefined) {
+      p.catch(() => {
+        // Autoplay bloqueado (ej. sin interacción previa); se ignora
+      });
+    }
+    return () => {
+      audio.pause();
+    };
+  }, [musicUrl]);
 
   // Función para vibrar en móvil (opcional)
   const vibrate = useCallback(() => {
@@ -27,7 +51,6 @@ const ValentineStories: React.FC<ValentineStoriesProps> = ({
   }, []);
 
   // Rutas de imágenes (public/images) — compatible con GitHub Pages
-  const base = import.meta.env.BASE_URL;
   const image = (name: string) => `${base}images/${name}.png`;
 
   // Stories: fotos por año en orden 2018 → 2019 → 2022 → 2024 → 2025, cada una con sticker del año

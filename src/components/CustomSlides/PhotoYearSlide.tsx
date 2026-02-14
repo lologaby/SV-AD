@@ -19,7 +19,7 @@ const PhotoYearSlide: React.FC<PhotoYearSlideProps> = ({ imageUrl, year }) => {
         className="absolute inset-0 w-full h-full object-cover"
         loading="eager"
       />
-      <YearSticker year={year} position="center" />
+      <YearSticker year={year} position="bottom-center" />
     </div>
   );
 };
