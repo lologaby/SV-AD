@@ -1,6 +1,12 @@
 import React from 'react';
 import QRCode from 'react-qr-code';
 
+/** Logo oficial Caribbean Cinemas (https://home.caribbeancinemas.com) */
+const CARIBBEAN_CINEMAS_LOGO = 'https://caribbeancinemas.com/img/logo.png';
+
+/** Tema Caribbean Cinemas: burgundy / rojo vino */
+const CC_STRIP_GRADIENT = 'linear-gradient(135deg, #6b0f1a 0%, #8B1538 40%, #a01d42 100%)';
+
 export interface CinemaInviteSlideProps {
   movieTitle?: string;
   cinema?: string;
@@ -17,7 +23,7 @@ export interface CinemaInviteSlideProps {
 
 /**
  * Apple Wallet Pass Style - Cinema Ticket
- * Diseño que imita fielmente un pase de Apple Wallet para boletos de cine
+ * Franja con tema Caribbean Cinemas, logo oficial, miniatura de la película sin romper el diseño.
  */
 const CinemaInviteSlide: React.FC<CinemaInviteSlideProps> = ({
   movieTitle = 'Película Sorpresa',
@@ -30,7 +36,7 @@ const CinemaInviteSlide: React.FC<CinemaInviteSlideProps> = ({
   qrImageUrl,
   ticketNumber,
   posterUrl,
-  message = '¿Vamos al cine?',
+  message = '¿Me aceptas esta humilde invitación al cine?',
 }) => {
   return (
     <div className="story-slide bg-[#0a0a0a] relative">
@@ -41,7 +47,6 @@ const CinemaInviteSlide: React.FC<CinemaInviteSlideProps> = ({
 
       {/* Contenedor del Wallet Pass */}
       <div className="flex-1 min-h-0 flex flex-col items-center justify-center px-4 pb-4">
-        {/* Apple Wallet Pass Card */}
         <div 
           className="w-full max-w-[340px] rounded-[18px] overflow-hidden"
           style={{
@@ -49,56 +54,49 @@ const CinemaInviteSlide: React.FC<CinemaInviteSlideProps> = ({
             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1)',
           }}
         >
-          {/* === STRIP HEADER (imagen/color del evento) === */}
+          {/* === FRANJA SUPERIOR: tema Caribbean Cinemas (sin foto de película) === */}
           <div 
-            className="relative h-[100px] overflow-hidden"
-            style={{
-              background: posterUrl 
-                ? undefined 
-                : 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-            }}
+            className="relative h-[88px] overflow-hidden flex items-center justify-between px-4"
+            style={{ background: CC_STRIP_GRADIENT }}
           >
-            {posterUrl && (
+            {/* Logo oficial Caribbean Cinemas */}
+            <div className="flex items-center gap-2 min-w-0">
               <img
-                src={posterUrl}
+                src={CARIBBEAN_CINEMAS_LOGO}
                 alt=""
-                className="absolute inset-0 w-full h-full object-cover"
-                style={{ filter: 'brightness(0.7)' }}
+                className="h-9 w-auto object-contain object-left flex-shrink-0 max-w-[140px]"
+                onError={(e) => { e.currentTarget.style.display = 'none'; }}
               />
+              <span className="text-white font-semibold text-sm truncate drop-shadow-md">{cinema}</span>
+            </div>
+            {ticketNumber && (
+              <span className="text-white/90 text-xs font-mono bg-black/25 px-2 py-1 rounded-full flex-shrink-0 ml-2">
+                {ticketNumber}
+              </span>
             )}
-            {/* Overlay gradient */}
-            <div 
-              className="absolute inset-0"
-              style={{
-                background: 'linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.6) 100%)',
-              }}
-            />
-            {/* Logo del cine */}
-            <div className="absolute top-3 left-4 right-4 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-white/90 flex items-center justify-center shadow-sm">
-                  <span className="text-lg">🎬</span>
-                </div>
-                <span className="text-white font-semibold text-sm drop-shadow-lg">{cinema}</span>
-              </div>
-              {ticketNumber && (
-                <span className="text-white/80 text-xs font-mono bg-black/30 px-2 py-1 rounded-full">
-                  {ticketNumber}
-                </span>
-              )}
-            </div>
-            {/* Título de la película */}
-            <div className="absolute bottom-3 left-4 right-4">
-              <h2 className="text-white font-bold text-lg leading-tight drop-shadow-lg line-clamp-2">
-                {movieTitle}
-              </h2>
-            </div>
           </div>
 
-          {/* === CUERPO DEL PASS === */}
+          {/* === CUERPO: miniatura de la película + grid de datos === */}
           <div className="px-4 py-4 bg-white">
-            {/* Grid de información */}
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="flex gap-4 mb-4">
+              {/* Miniatura de la película (carátula) */}
+              {posterUrl && (
+                <div className="flex-shrink-0">
+                  <div className="w-[72px] h-[108px] rounded-lg overflow-hidden shadow-md ring-1 ring-black/10">
+                    <img
+                      src={posterUrl}
+                      alt={movieTitle}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              )}
+              {/* Título + grid en el mismo bloque */}
+              <div className="flex-1 min-w-0">
+                <h2 className="text-gray-900 font-bold text-sm leading-tight line-clamp-2 mb-3">
+                  {movieTitle}
+                </h2>
+                <div className="grid grid-cols-2 gap-x-3 gap-y-2">
               {/* Fecha */}
               <div>
                 <p className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold mb-0.5">
@@ -131,6 +129,8 @@ const CinemaInviteSlide: React.FC<CinemaInviteSlideProps> = ({
                   Asientos
                 </p>
                 <p className="text-gray-900 font-semibold text-sm">{seats}</p>
+              </div>
+                </div>
               </div>
             </div>
 

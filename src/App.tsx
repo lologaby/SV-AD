@@ -27,13 +27,13 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
   },
   {
     question: '¿En qué mes nos conocimos?',
-    options: ['Enero', 'Junio', 'Septiembre', 'Diciembre'],
-    correctIndex: 1,
+    options: ['Enero', 'Junio', 'Septiembre', 'Octubre', 'Diciembre'],
+    correctIndex: 3, // Octubre
   },
   {
-    question: '¿Qué me gusta que me regalen?',
-    options: ['Flores', 'Chocolate', 'Tiempo contigo', 'Todo lo anterior'],
-    correctIndex: 3,
+    question: 'Si yo fuera a la chocolatería, ¿qué me pediría?',
+    options: ['Bombones de chocolate', 'Quesito', 'Cheesecake', 'Un croissant'],
+    correctIndex: 3, // Un croissant
   },
 ]
 
@@ -71,7 +71,7 @@ function App() {
             qrImageUrl: 'qr-tickets.png',
             ticketNumber: '#9338842',
             posterUrl: 'poster-entre-las-vias.png',
-            message: '¿Vamos al cine?',
+            message: '¿Me aceptas esta humilde invitación al cine?',
           }}
         />
       )}
