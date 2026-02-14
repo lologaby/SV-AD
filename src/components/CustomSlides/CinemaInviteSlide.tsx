@@ -80,16 +80,20 @@ const CinemaInviteSlide: React.FC<CinemaInviteSlideProps> = ({
           {/* === CUERPO: antes del reveal = regalo; después = película + datos === */}
           <div className="px-4 py-4 bg-white">
             {!revealed ? (
-              /* Estado cerrado: solo invitación + botón Abrir regalo */
+              /* Estado cerrado: solo invitación + botón Abrir regalo (estilo Caribbean Cinemas) */
               <div className="flex flex-col items-center justify-center py-8">
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-amber-100 to-amber-200 flex items-center justify-center text-4xl mb-6 shadow-inner ring-2 ring-amber-300/50">
+                <div
+                  className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl mb-6 shadow-md border border-[#8B1538]/20"
+                  style={{ background: 'linear-gradient(180deg, #f8e8eb 0%, #edd4d9 100%)' }}
+                >
                   🎁
                 </div>
                 <p className="text-gray-600 font-body text-center mb-6">Tu invitación está dentro</p>
                 <button
                   type="button"
                   onClick={() => setRevealed(true)}
-                  className="min-h-[48px] px-8 py-3 rounded-2xl font-body font-bold text-white bg-gradient-to-r from-amber-500 to-amber-600 shadow-lg hover:from-amber-600 hover:to-amber-700 active:scale-[0.98] transition-all"
+                  className="min-h-[48px] px-8 py-3 rounded-2xl font-body font-bold text-white shadow-lg active:scale-[0.98] transition-transform hover:opacity-95"
+                  style={{ background: CC_STRIP_GRADIENT }}
                 >
                   Abrir regalo
                 </button>

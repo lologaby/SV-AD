@@ -3,6 +3,7 @@ import WorthyQuiz from './components/WorthyQuiz'
 import type { QuizQuestion } from './components/WorthyQuiz'
 import ValentineStories from './components/ValentineStories'
 import ProfileSwitchAnimation from './components/ProfileSwitchAnimation'
+import CountdownScreen, { isCountdownReachedOrSkipped, setCountdownSkipped } from './components/CountdownScreen'
 
 type Stage = 'quiz' | 'stories' | 'profile_switch'
 
@@ -11,6 +12,13 @@ const STORAGE_KEY_PASSED = 'sv-ad-passed'
 function getInitialStage(): Stage {
   if (typeof window === 'undefined') return 'quiz'
   return localStorage.getItem(STORAGE_KEY_PASSED) ? 'stories' : 'quiz'
+}
+
+function getShowCountdown(): boolean {
+  if (typeof window === 'undefined') return true
+  // URL alternativa para skip: /skip (ej. lupitayjuangabriel.com/skip)
+  if (typeof window !== 'undefined' && window.location.pathname.includes('/skip')) return false
+  return !isCountdownReachedOrSkipped()
 }
 
 // Helper para rutas de imágenes con BASE_URL
@@ -50,10 +58,26 @@ const QUIZ_QUESTIONS: QuizQuestion[] = [
 
 function App() {
   const [stage, setStage] = useState<Stage>(getInitialStage)
+  const [showCountdown, setShowCountdown] = useState(getShowCountdown)
+
+  // Si entraron por /skip: marcar skip y limpiar la URL
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (!window.location.pathname.includes('/skip')) return
+    setCountdownSkipped()
+    const base = (import.meta.env.BASE_URL || '/').replace(/\/?$/, '/')
+    window.history.replaceState(null, '', base === '/' ? '/' : base)
+  }, [])
 
   const handleQuizPass = () => {
     localStorage.setItem(STORAGE_KEY_PASSED, '1')
     setStage('stories')
+  }
+
+  if (showCountdown) {
+    return (
+      <CountdownScreen onReached={() => setShowCountdown(false)} />
+    )
   }
 
   return (

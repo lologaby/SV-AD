@@ -6,27 +6,27 @@ export interface YearStickerProps {
 }
 
 /**
- * Sticker con el año estilo Instagram Stories.
- * Posición fija para evitar que se mueva al cargar.
+ * Año minimalista integrado al estilo de la story.
+ * Pill sutil en la parte inferior, sin dominar la foto.
  */
 const YearSticker: React.FC<YearStickerProps> = ({
   year,
   position = 'bottom-center',
 }) => {
   const positionClasses = {
-    'top-left': 'top-6 left-6',
-    'top-right': 'top-6 right-6',
-    'bottom-left': 'bottom-8 left-6',
-    'bottom-right': 'bottom-8 right-6',
-    'bottom-center': 'bottom-8 left-1/2 -translate-x-1/2',
+    'top-left': 'top-4 left-4',
+    'top-right': 'top-4 right-4',
+    'bottom-left': 'bottom-5 left-4',
+    'bottom-right': 'bottom-5 right-4',
+    'bottom-center': 'bottom-5 left-1/2 -translate-x-1/2',
     'center': 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2',
   };
 
   return (
     <div className={`absolute ${positionClasses[position]} z-20`}>
-      <div className="bg-white/25 backdrop-blur-md rounded-2xl px-6 py-3 shadow-xl border border-white/30 min-w-[5rem] text-center">
-        <p className="font-display font-bold text-4xl md:text-5xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)] tabular-nums">{year}</p>
-      </div>
+      <span className="inline-flex items-center rounded-full bg-black/35 backdrop-blur-sm px-3 py-1.5 text-sm font-medium text-white/95 tracking-wide tabular-nums shadow-[0_1px_3px_rgba(0,0,0,0.2)]">
+        {year}
+      </span>
     </div>
   );
 };
